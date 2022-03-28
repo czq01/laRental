@@ -1,5 +1,6 @@
 import db from '../db.js';
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore"
+import { collection, getDocs, addDoc, query, where, limit } from "firebase/firestore"
+import config from '../config.js';
 import House from '../models/house.js';
 
 
@@ -7,7 +8,7 @@ import House from '../models/house.js';
 const addHouse = async (req, res, next) => {
     try {
         const house = req.body;
-        await addDoc(collection(db, 'houses'), house);
+        await addDoc(collection(db, config.collection), house);
         res.send('Record saved successfully');
     } catch (error) {
         res.status(400).send(error.message);
@@ -16,7 +17,11 @@ const addHouse = async (req, res, next) => {
 
 const getAllHouses = async (req, res, next) => {
     try {
-        const data = await getDocs(collection(db, "houses"));
+        const q = query(
+            collection(db, config.collection),
+            limit(5)
+        );
+        const data = await getDocs(q);
         res.send(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
     } catch (error) {
         res.status(400).send(error.message);
@@ -28,7 +33,7 @@ const getHouseByAmenities = async (req, res, next) => {
 
     try {
         const q = query(
-            collection(db, 'houses'),
+            collection(db, config.collection),
             where("amenities", "array-contains", amenities[0]));
         
         const data = await getDocs(q);

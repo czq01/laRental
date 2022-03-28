@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import assert from 'assert';
+import { collection } from '@firebase/firestore';
 
 dotenv.config();
 
@@ -14,7 +15,8 @@ const {
     STORAGE_BUCKET,
     MESSAGING_SENDER_ID,
     APP_ID,
-    MEASUREMENT_ID
+    MEASUREMENT_ID,
+    COLLECTION
 } = process.env;
 
 assert(PORT, 'PORT is required');
@@ -30,10 +32,11 @@ const config = {
         databaseURL: DATABASE_URL,
         projectId: PROJECT_ID,
         storageBucket: STORAGE_BUCKET,
-        messagingSenderId: MEASUREMENT_ID,
+        messagingSenderId: MESSAGING_SENDER_ID,
         appId: APP_ID,
         measurementId: MEASUREMENT_ID
-    }
+    },
+    collection: COLLECTION
 }
 
 export default config;
