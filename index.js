@@ -1,11 +1,15 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import mongoose from 'mongoose';
+
 import config from './config.js';
 import houseRouter from './routes/house.js';
 
-const app = express();
+// connect to cloud MongoDB
+mongoose.connect(config.mongo_url)
 
+const app = express();
 
 app.use(express.json())
 app.use(cors());

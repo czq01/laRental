@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "devStart": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "firebase": "^9.6.10"
+    "firebase": "^9.6.10",
+    "mongoose": "^6.2.9",
+    "node-geocoder": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
