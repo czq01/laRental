@@ -32,6 +32,31 @@ const HouseSchema = new mongoose.Schema({
 // Add index on location for later GeoJson query
 HouseSchema.index({location: '2dsphere'});
 
+// Add search query function
+HouseSchema.query.findBySearch = function(coords, meters, pricesRange, amenities) {
+    return this.find({
+        location: {
+            $nearSphere: {
+                $geometry: {
+                    type: "point",
+                    coordinates: [
+                        coords[0],
+                        coords[1]
+                    ]
+                },
+                $maxDistance: meters
+            }
+        },
+        price: {
+            $gte: pricesRange[0],
+            $lse: pricesRange[1]
+        },
+        amenities: {
+            $all: amenities
+        }
+    })
+};
+
 // Before save, geocode the address
 HouseSchema.pre('save', async function(next) {
     const loc = await geocoder.geocode(this.address);

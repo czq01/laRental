@@ -4,12 +4,14 @@ import assert from 'assert';
 dotenv.config();
 
 const {
+    NODE_ENV,
     PORT,
     HOST,
     HOST_URL,
     MONGO_URL,
     GEOCODING_PROVIDER,
     API_KEY,
+    JWT_SECRET,
     AUTH_DOMAIN,
     DATABASE_URL,
     PROJECT_ID,
@@ -24,12 +26,14 @@ assert(PORT, 'PORT is required');
 assert(HOST, 'HOST is required');
 
 const config = {
+    node_env: NODE_ENV,
     port: PORT,
     host: HOST,
     url: HOST_URL,
     mongo_url: MONGO_URL,
     geocoding_provider: GEOCODING_PROVIDER,
     api_key: API_KEY,
+    jwt_secret: JWT_SECRET,
     // firebaseConfig : {
     //     authDomain: AUTH_DOMAIN,
     //     databaseURL: DATABASE_URL,

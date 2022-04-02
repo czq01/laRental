@@ -18,26 +18,23 @@ const addHouse = async (req, res, next) => {
 // API: /house?addr={}&distRange={}&priceRange={}&amenities={}
 // Search house
 const getHouseBySearch = async (req, res, next) => {
+
+    // prepare search params
+    const { addr, distRange } = req.query;
     const priceRange = req.query.priceRange.split(',').map((p) => (parseFloat(p)));
+    const amenities = req.query.amenities.split(',');
+
     try {
-        const loc = await geocoder.geocode(req.query.addr);
-        const houses = await House.find(
-            {   
-                location: {
-                    $nearSphere: {
-                        $geometry: {
-                            type: "point",
-                            coordinates: [
-                                loc[0].longitude,
-                                loc[0].latitude
-                            ]
-                        },
-                        $maxDistance: req.query.distRange
-                    }
-                }
-            }
-        ).where('rental_price').gte(priceRange[0]).lte(priceRange[1])
-        .where('amenities').all(req.query.amenities.split(','));
+        // geocode requested address
+        const loc = await geocoder.geocode(addr);
+
+        // query
+        const houses = await House.find().findBySearch(
+            [loc[0].longitude, loc[0].latitude],    // coords
+            distRange,  // meters
+            priceRange, // priceRange
+            amenities   // amenities
+        )
 
         res.status(200).send({
             success: true,
