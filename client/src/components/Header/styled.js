@@ -7,11 +7,13 @@ export const StyledHeader = styled.div`
   /* margin-top: -80px; */
   top: 0;
   // size
-  box-sizing: border-box;
   height: 40px;
   width: 100%;
   // color
-  background: transparent;
+  
+  background: ${({headerTrans}) => (
+    headerTrans ? 'transparent' : 'black'
+  )};
   color: white;
   // debug
   /* border-bottom: red 1px solid; */
@@ -20,6 +22,7 @@ export const StyledHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 `
 
 export const Website = styled.div`
@@ -61,7 +64,7 @@ export const Logo = styled.div`
 
   // Elements
   & h1 {
-    font-size: 20px;
+    font-size: 15px;
   }
 `
 

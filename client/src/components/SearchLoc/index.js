@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../MuiTheme'
 import { 
   Container, 
-  HeaderIcon, 
   HeaderText, 
   HeaderWrapper, 
   Input, 

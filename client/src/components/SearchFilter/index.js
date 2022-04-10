@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Stack from '@mui/material/Stack';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { ThemeProvider } from '@mui/material/styles';
 

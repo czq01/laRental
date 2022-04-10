@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { styled as mStyled } from '@mui/material/styles';
-import Slider, { SliderThumb } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
+
 export const Container = styled.div`
   // Self
   height: calc(100vh - 40px);
-  background: transparent;
+  position: relative;
+  z-index: 100;
 
   // Elements
   display: grid;

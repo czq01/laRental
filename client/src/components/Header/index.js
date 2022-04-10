@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { Container } from '../../pages/Main/styled'
 
 import {
   StyledHeader,
@@ -10,10 +9,10 @@ import {
   SiteItem,
 } from "./styled"
 
-function Header() {
+function Header({headerTrans}) {
   return (
     <>
-      <StyledHeader>
+      <StyledHeader headerTrans={headerTrans}>
         <Website>
           <Wrapper>
             <Logo>

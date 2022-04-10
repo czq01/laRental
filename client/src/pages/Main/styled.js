@@ -16,13 +16,16 @@ export const BackgroundImg = styled.div`
 `
 
 
-export const Container = styled.div`
-  box-sizing: border-box;
+export const BgFilter = styled.div`
   width: 100vw;
   height: 100vh;
-  position: relative;
-  z-index: 10;
+  top:0;
+
+  // overflow: auto;
+  position: fixed;
+  z-index: 2;
 
   backdrop-filter: blur(70px);
   background: rgba(0,0,0,0.4);
 `
+

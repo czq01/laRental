@@ -3,13 +3,16 @@ import styled from "styled-components";
 export const Container = styled.div`
   // Self
   height: calc(100vh - 40px);
-  background: transparent;
+  width: 100vw;
+  position: relative;
+  // background: transparent;
 
   // Elememts
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 `
 
 export const HeaderWrapper = styled.div`
@@ -21,7 +24,6 @@ export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
 `
 
 export const HeaderText = styled.h1`
@@ -29,7 +31,7 @@ export const HeaderText = styled.h1`
   color: white;
   font-size: 70px;
   white-space: nowrap;
-  
+
 `
 
 export const HeaderIcon = styled.img`

@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
 } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
 import { GlobalStyles } from './GlobalSyled';
 
@@ -15,6 +16,11 @@ import './App.css'
 function App() {
   return (
     <>
+      <Helmet>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@700&display=swap" rel="stylesheet" />
+      </Helmet>
       <GlobalStyles />
       <Router>
         <Routes>

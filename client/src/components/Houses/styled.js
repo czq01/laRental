@@ -5,14 +5,19 @@ import Select from '@mui/material/Select';
 import { theme } from '../MuiTheme'
 
 export const Container = styled.div`
+  
   // Self
-  height: calc(100vh - 40px);
-  background: transparent;
+  position: relative;
+  filter: ${({showDetail}) => (
+    showDetail ? 'blur(5px)' :  null
+  )};
 
   // Elements
   display: grid;
-  grid-template-rows: 50px auto 70px;
+  grid-template-rows: 70px auto 70px;
   grid-template-columns: 1fr 1fr;
+
+  z-index: 10;
 `
 
 export const LocationInfo = styled.div`
@@ -26,6 +31,7 @@ export const LocationInfo = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color: white;
 
   padding-left: 30px;
 
@@ -64,6 +70,17 @@ export const StyledSelect = mStyled(Select)(() => ({
   },
 }))
 
+export const GridWrapper = styled.div`
+  grid-row: 2;
+  grid-column: 1 / span 2;
+  width: 90%;
+  place-self: center;
+  align-self: start;
+
+  display: flex;
+  padding: 50px;
+`
+
 
 export const PageWrapper = styled.div`
   grid-row: 3;
@@ -74,3 +91,5 @@ export const PageWrapper = styled.div`
   justify-content: center;
   align-items: center;
 `
+
+
