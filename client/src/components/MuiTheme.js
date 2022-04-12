@@ -15,14 +15,20 @@ export const theme = createTheme({
     },
   },
   components: {
-    MuiMenu: {
-      root: {
-        backgroundColor: '#69f0ae'
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          color: 'black',
+        },
       }
-      
     },
-    
-    
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          border: '#64748B',
+          color: 'white',
+        },
+      }
+    }
   }
-  
 });

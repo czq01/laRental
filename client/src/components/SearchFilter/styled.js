@@ -11,7 +11,7 @@ export const Container = styled.div`
   // Elements
   display: grid;
   grid-template-columns: 1fr 1.3fr 1fr;
-  grid-template-rows: 20% 30%  auto 1fr;
+  grid-template-rows: 20% 40%  auto 1fr;
 `
 
 export const HeaderWrapper = styled.div`

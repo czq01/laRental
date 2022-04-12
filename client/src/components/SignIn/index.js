@@ -1,6 +1,10 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
+import { login, reset } from '../../features/auth/authSlice'
 import { Form } from '../Form.styled'
 import { Input, FormWrapper } from './styled'
 import { Button } from '../Button.styled'
@@ -20,8 +24,32 @@ function SignIn() {
     }))
   }
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { user, isLoading, isError, isSuccess, message} = useSelector((state)=>state.auth)
+
+  useEffect(()=>{
+    if(isError){
+
+      toast.error(message)
+    }
+
+    if(isSuccess){
+      navigate('/main/search')
+    }
+
+    dispatch(reset())
+
+  }, [user,isError, isSuccess, isLoading, message, navigate, dispatch])
+
+
   const onSubmit = (e) => {
     e.preventDefault()
+    const userData = {
+      email,
+      password
+    }
+    dispatch(login(userData))
   }
 
   return (
@@ -46,9 +74,9 @@ function SignIn() {
           />
         </Form>
         <Button
-          to='/'
-          type='submit'
-          primary={1}>
+          to='/main/search'
+          onClick={onSubmit}
+          primary={'true'}>
           Sign In
         </Button>
       </FormWrapper>

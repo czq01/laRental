@@ -7,6 +7,8 @@ import Houses from '../../components/Houses'
 import SearchFilter from '../../components/SearchFilter'
 import SearchLoc from "../../components/SearchLoc"
 import { BackgroundImg, BgFilter } from "./styled"
+import Community from '../../components/Community'
+import CreatePost from '../../components/CreatePost'
 
 function Main() {
 
@@ -37,6 +39,8 @@ function Main() {
         <Route path='/search' element={<SearchLoc />} />
         <Route path='/filter' element={<SearchFilter />} />
         <Route path='/houses' element={<Houses />} />
+        <Route path='/community' element={<Community />} />
+        <Route path='/post/*' element={<CreatePost />} />
       </Routes>
     </>
   )

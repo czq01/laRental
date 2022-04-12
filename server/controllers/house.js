@@ -23,7 +23,7 @@ const getHouseBySearch = async (req, res, next) => {
     const { addr, distRange } = req.query;
     const priceRange = req.query.priceRange.split(',').map((p) => (parseFloat(p)));
     const amenities = req.query.amenities.split(',');
-
+    console.log(amenities)
     try {
         // geocode requested address
         const loc = await geocoder.geocode(addr);

@@ -1,17 +1,21 @@
 import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Stack from '@mui/material/Stack';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import Chip from '@mui/material/Chip';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { ThemeProvider } from '@mui/material/styles';
 
+import { updateSearch } from '../../features/search/searchSlice';
+import { getHouseBySearch } from '../../features/houses/houseSlice';
 import { theme } from '../MuiTheme'
 import {
   AmenitiesFilter,
   AmenitiesInput,
   Chips,
   Container,
-  Filter,
   HeaderWrapper,
   PriceSlider,
   ListItem,
@@ -22,15 +26,23 @@ import { Button } from '../Button.styled'
 
 function SearchFilter() {
 
+  const { search: {addr, priceRange, distRange, amenities} } = useSelector((state)=>state.search)
   // Price related state
-  const [price, setPrice] = useState([1000, 3000]);
+  const [inputPrice, setInputPrice] = useState(priceRange ? priceRange : [1000, 3000]);
 
-  const handleChange = (event, newValue) => {
-    setPrice(newValue);
+  const handlePriceChange = (event, newValue) => {
+    setInputPrice(newValue);
+  };
+
+  // Distance related state
+  const [inputDist, setInputDist] = useState(distRange ? distRange : (0.5));
+
+  const handleDistChange = (event, newValue) => {
+    setInputDist(newValue);
   };
 
   // Amenities related state
-  const [chips, setChips] = useState(['Air Condition'])
+  const [chips, setChips] = useState(amenities ? amenities : (['Air Conditioning']))
 
   const handleDelete = (indexToRemove) => {
     setChips([...chips.filter((_, index) => index !== indexToRemove)]);
@@ -43,19 +55,63 @@ function SearchFilter() {
     }
   };
 
+  const dispatch = useDispatch()
+  const onUpdateSearch = () => {
+      const searchParams = {
+        'priceRange': inputPrice,
+        'distRange': inputDist,
+        'amenities': chips,
+      }
+      dispatch(updateSearch(searchParams))
+
+      dispatch(getHouseBySearch({addr, ...searchParams}))
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <HeaderWrapper>
-          <FilterListIcon 
+          <FilterListIcon
             color='primary'
             fontSize='large'
-            />
+          />
           <h1>
             Add filter.
           </h1>
         </HeaderWrapper>
-        <Filter>
+
+        <Stack
+          spacing={6}
+          alignItems='center'
+          justifyContent={'center'}
+          sx={{ mb: 1, width: '100%' }}
+          gridRow={2}
+          gridColumn={2}>
+
+
+          <Stack
+            spacing={2}
+            direction="row"
+            sx={{ mb: 1, width: '70%' }}
+            alignItems="center">
+            <DirectionsWalkIcon
+              color='primary'
+              fontSize='small'
+            />
+            <PriceSlider
+              value={inputDist}
+              onChange={handleDistChange}
+              valueLabelDisplay="auto"
+              step={0.5}
+              marks
+              min={0.5}
+              max={10}
+            />
+            <DirectionsCarIcon
+              color='primary'
+              fontSize='large'
+            />
+          </Stack>
           <Stack
             spacing={2}
             direction="row"
@@ -66,23 +122,22 @@ function SearchFilter() {
               fontSize='small'
             />
             <PriceSlider
-              getAriaLabel={() => 'Temperature range'}
-              value={price}
-              onChange={handleChange}
+              value={inputPrice}
+              onChange={handlePriceChange}
               valueLabelDisplay="auto"
               step={500}
               marks
               min={500}
               max={8000}
-            // getAriaValueText={valuetext}
             />
             <AttachMoneyOutlinedIcon
               color='primary'
               fontSize='large'
             />
           </Stack>
+        </Stack>
 
-        </Filter>
+
         <AmenitiesFilter>
           <Chips>
             {chips.map((chip, idx) => (
@@ -102,6 +157,7 @@ function SearchFilter() {
         <BtnWrapper>
           <Button
             to={'../houses'}
+            onClick={onUpdateSearch}
             primary={1}
           >
             Go
