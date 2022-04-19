@@ -31,9 +31,21 @@ const PostSchema = mongoose.Schema({
     // Relationships
     // Hosue resource attached to this post
     house: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'House',
-        require: [true, "Please attach a house resource"]
+        house_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'House',
+            require: [true, "Please attach a house resource"]
+        },
+        // normalize location for query
+        location: {
+            type: {
+                type: String,
+                enum: ['Point']
+            },
+            coordinates: {
+                type: [Number],
+            },
+        },
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
