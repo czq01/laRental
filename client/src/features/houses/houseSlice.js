@@ -46,6 +46,22 @@ export const updateHouseLikes = createAsyncThunk('updateHouseLikes',
     }
   })
 
+export const sortHouseByPrice = createAsyncThunk('sortByPrice',
+  async (search, thunkAPI) => {
+    try {
+      return await houseService.sortHouseByPrice(search)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      // console.log(message)
+      return thunkAPI.rejectWithValue(message)
+    }
+  })
+
 export const houseSlice = createSlice({
   name: 'houses',
   initialState,
@@ -87,6 +103,21 @@ export const houseSlice = createSlice({
         house.likes = action.payload.house.likes
       })
       .addCase(updateHouseLikes.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.houses = []
+      })
+
+      .addCase(sortHouseByPrice.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(sortHouseByPrice.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.data = action.payload.data
+      })
+      .addCase(sortHouseByPrice.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

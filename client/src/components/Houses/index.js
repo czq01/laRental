@@ -21,7 +21,7 @@ import {
 } from './styled'
 import HouseDetail from '../HouseDetail';
 import HouseCard from '../HouseCard';
-import { getHouseBySearch, updateHouseLikes, reset } from '../../features/houses/houseSlice';
+import { getHouseBySearch, updateHouseLikes, reset, sortHouseByPrice } from '../../features/houses/houseSlice';
 import { getMe } from '../../features/auth/authSlice'
 function Houses() {
 
@@ -65,6 +65,19 @@ function Houses() {
     dispatch(updateHouseLikes(house_id)).then(() => {
       dispatch(getMe())
     })
+  }
+
+  const sortByPrice = (asc) =>{
+    dispatch(sortHouseByPrice({
+      addr,
+      distRange,
+      priceRange,
+      amenities,
+      page,
+      limit: 10,
+      sortBy: "price",
+      asc: asc
+    }))
   }
 
   useEffect(() => {
@@ -114,8 +127,8 @@ function Houses() {
               variant='outlined'
             // onChange={handleChange}
             >
-              <MenuItem value={'Price'}>$</MenuItem>
-              <MenuItem value={'Distance'}>km</MenuItem>
+              <MenuItem value={'Price Ascending'} onClick={()=>{sortByPrice(true)}}>$ ↑</MenuItem>
+              <MenuItem value={'Price Descending'} onClick={()=>{sortByPrice(false)}}>$ ↓</MenuItem>
             </StyledSelect>
           </Stack>
         </FuncBtns>
