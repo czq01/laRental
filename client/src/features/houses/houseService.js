@@ -40,10 +40,23 @@ const updateHouseLikes = async (house_id, token) => {
   return response.data
 }
 
+const sortHouseByPrice = async (searchData) => {
+  let {addr, priceRange, distRange, amenities, page, limit, sortBy, asc} = searchData
+  priceRange = priceRange.join()
+  amenities = amenities.join()
+
+  const url = `${API_URL}?addr=${addr}&distRange=${distRange}&priceRange=${priceRange}&amenities=${amenities}&page=${page}&limit=${limit}&sortBy=${sortBy}&asc=${asc}`
+
+  const response = await axios.get(url)
+
+  return response.data
+}
+
 const houseService = {
   getHouseBySearch,
   getHousesByLoc,
   updateHouseLikes,
+  sortHouseByPrice
 }
 
 export default houseService
