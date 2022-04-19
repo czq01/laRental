@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 import { geocoder } from "../utils/geo.js";
 
 const HouseSchema = new mongoose.Schema({
@@ -59,8 +60,8 @@ const HouseSchema = new mongoose.Schema({
 HouseSchema.index({ location: '2dsphere' });
 
 // Add pagination plugin
-HouseSchema.plugin(mongoosePaginate);
-
+// HouseSchema.plugin(mongoosePaginate);
+HouseSchema.plugin(aggregatePaginate)
 
 // Before save, geocode the address
 HouseSchema.pre('save', async function (next) {

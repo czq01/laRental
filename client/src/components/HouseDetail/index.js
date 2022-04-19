@@ -33,7 +33,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
 
   const { price,
     location,
-    distance,
+    dist,
     amenities,
     highlights,
     size,
@@ -65,7 +65,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
             <GpsFixedIcon color='primary' />
             <p>{location.formattedAddr}</p>
             <p style={{ color: '#69f0ae' }}>
-              {(distance < 1) ? `${distance * 1000}m` : `${distance}km`}
+            {(dist < 1000) ? `${dist}m` : `${dist / 1000}km`}
             </p>
           </Stack>
 

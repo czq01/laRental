@@ -59,7 +59,7 @@ function SearchFilter() {
   const onUpdateSearch = () => {
       const searchParams = {
         'priceRange': inputPrice,
-        'distRange': inputDist,
+        'distRange': inputDist * 1000,
         'amenities': chips,
       }
       dispatch(updateSearch(searchParams))

@@ -24,23 +24,23 @@ const addHouse = async (req, res) => {
 const getHouseBySearch = async (req, res) => {
 
     // prepare search params
-    const { addr, distRange, page, limit } = req.query;
+    const { addr, distRange, page, limit, sortBy, asc } = req.query;
     const priceRange = req.query.priceRange.split(',').map((p) => (parseFloat(p)));
-    console.log(priceRange)
     const amenities = req.query.amenities.split(',');
+    const asc_boolean = asc === 'true' ? true : false
     try {
         // geocode requested address
         const loc = await geocoder.geocode(addr);
 
         const query = {
-            location: {
-                $geoWithin: {
-                    $centerSphere: [
-                        [loc[0].longitude, loc[0].latitude],
-                        kmToRadius(distRange)
-                    ]
-                }
-            },
+            // location: {
+            //     $geoWithin: {
+            //         $centerSphere: [
+            //             [loc[0].longitude, loc[0].latitude],
+            //             kmToRadius(distRange)
+            //         ]
+            //     }
+            // },
             price: {
                 $gte: priceRange[0],
                 $lte: priceRange[1],
@@ -50,18 +50,33 @@ const getHouseBySearch = async (req, res) => {
             }
         }
 
-        const houses = await House.paginate(
-            query,
+        const aggregate = House.aggregate([
             {
-                page,
-                limit,
-                lean: true  // set this to allow adding extra fields
-            })
+                $geoNear: {
+                    near: {
+                        type: "point",
+                        coordinates: [loc[0].longitude, loc[0].latitude],
+                    },
+                    maxDistance: Number(distRange),
+                    distanceField: "dist",
+                    query,
+                    spherical: true
+                }
+            }
+        ])
 
+        const options = {
+            page,
+            limit,
+            lean: true  // set this to allow adding extra fields
+        } 
+
+        if (sortBy) options.sort = `${asc_boolean ? '' : '-'}${sortBy}`
+
+        const houses = await House.aggregatePaginate(aggregate, options)
+        
         houses.docs.forEach(doc => {
-            doc.distance = distance([loc[0].longitude, loc[0].latitude],
-                doc.location.coordinates);
-
+            doc.dist = doc.dist.toFixed(1)
         });
 
         res.status(200).json({

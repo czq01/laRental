@@ -21,7 +21,7 @@ import {
 } from './styled'
 import HouseDetail from '../HouseDetail';
 import HouseCard from '../HouseCard';
-import { getHouseBySearch, updateHouseLikes } from '../../features/houses/houseSlice';
+import { getHouseBySearch, updateHouseLikes, reset } from '../../features/houses/houseSlice';
 import { getMe } from '../../features/auth/authSlice'
 function Houses() {
 
@@ -32,7 +32,7 @@ function Houses() {
   
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
-  const onPageChange = (event, value) => {
+  const onPageChange = (_, value) => {
     setPage(value)
   }
   // Watch page changes
@@ -48,6 +48,8 @@ function Houses() {
       page,
       limit: 10,
     }))
+    dispatch(reset())
+    
   }, [page])
   
   
