@@ -7,12 +7,12 @@ export const StyledHeader = styled.div`
   /* margin-top: -80px; */
   top: 0;
   // size
-  height: 40px;
+  height: 80px;
   width: 100%;
   // color
   
   background: ${({headerTrans}) => (
-    headerTrans ? 'transparent' : 'black'
+    headerTrans ? 'transparent' : 'rgba(105, 240, 174, 0.1)'
   )};
   color: white;
   // debug
@@ -64,7 +64,11 @@ export const Logo = styled.div`
 
   // Elements
   & h1 {
-    font-size: 15px;
+    font-size: 25px;
+  }
+
+  & span {
+    color: #69f0ae
   }
 `
 
@@ -77,8 +81,9 @@ export const SiteItem = styled.div`
   & a {
     white-space: nowrap;
     text-decoration: none;
-    font-size: 15px;
-    color: grey;
+    font-size: 10px;
+    color: white;
+    font-weight: lighter;
   }
 
 `

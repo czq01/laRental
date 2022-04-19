@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 import { register, reset } from '../../features/auth/authSlice'
 import { Form } from '../Form.styled'
@@ -29,20 +29,20 @@ function SignUp() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { 
-    user, 
-    isLoading, 
-    isError, 
-    isSuccess, 
+  const {
+    user,
+    isLoading,
+    isError,
+    isSuccess,
     message
-  } = useSelector((state)=>state.auth)
+  } = useSelector((state) => state.auth)
 
-  useEffect(()=>{
-    if(isError){
+  useEffect(() => {
+    if (isError) {
       toast.error(message)
     }
 
-    if(isSuccess){
+    if (isSuccess) {
       navigate('/main/search')
     }
 
@@ -50,17 +50,20 @@ function SignUp() {
 
   }, [
     user,
-    isError, 
-    isSuccess, 
-    isLoading, 
-    message, 
-    navigate, 
+    isError,
+    isSuccess,
+    isLoading,
+    message,
+    navigate,
     dispatch
   ])
 
   const onSubmit = (e) => {
     e.preventDefault()
-    if (password !== pwdConfirm) {
+    if (!name || !email || !password || !pwdConfirm) {
+      toast.error('Please fill up all fields')
+    }
+    else if (password !== pwdConfirm) {
       toast.error('Passwords do not match')
     } else {
       const userData = {

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   // Self
-  height: calc(100vh - 40px);
+  height: calc(100vh - 80px);
   width: 100vw;
   position: relative;
   // background: transparent;

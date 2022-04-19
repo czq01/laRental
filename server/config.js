@@ -12,6 +12,7 @@ const {
     GEOCODING_PROVIDER,
     API_KEY,
     JWT_SECRET,
+    BCRYPT_SALT,
     AUTH_DOMAIN,
     DATABASE_URL,
     PROJECT_ID,
@@ -34,6 +35,7 @@ const config = {
     geocoding_provider: GEOCODING_PROVIDER,
     api_key: API_KEY,
     jwt_secret: JWT_SECRET,
+    bcrypt_salt: BCRYPT_SALT,
     // firebaseConfig : {
     //     authDomain: AUTH_DOMAIN,
     //     databaseURL: DATABASE_URL,

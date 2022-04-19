@@ -1,65 +1,120 @@
+import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import House from "../models/House.js"
-import geocoder from "../utils/geocoder.js";
+import User from "../models/User.js"
+import { geocoder, kmToRadius } from "../utils/geo.js";
 
 // @desc    Publish a post
 // @route   POST /post
 // @access  Private
 const createPost = async (req, res) => {
-    const { type, house, requirements, desc} = req.body;
-    const createdBy = req.user.id;
-    const post = await Post.create({
-        type,
-        house,
-        requirements,
-        desc,
-        createdBy,
-    });
+    const { type, house_id, requirements, desc } = req.body;
+    const createdBy = req.user._id;
 
-    if (post) {
+    // Use transaction
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try {
+        // Find and update attached house
+        const house = await House.findById(house_id)
+        if (!house) throw Error("House not exists.")
+
+        // Create post
+        const post = (await Post.create([{
+            type,
+            house,
+            requirements,
+            desc,
+            createdBy,
+        }], {session}))[0];
+        if (!post) throw Error('Invalid post data')
+
+        // Update house
+        house.posts.push(post._id)
+        await house.save({ validateBeforeSave: false, session })
+
+        // Update author
+        const user = await User.findById(createdBy)
+        user.posts.push(post._id)
+        await user.save({ validateBeforeSave: false, session })
+
+        await session.commitTransaction()
+
         res.status(201).send({
             success: true,
-            data: {
-                _id: post.id,
-                house: await House.findById(post.house),
-                desc: post.desc,
-                requirements: post.requirements
-            }
-        });
-    } else {
+            post,
+        })
+    } catch (error) {
+
+        await session.abortTransaction();
+
         res.status(401).send({
             success: false,
-            message: 'Invalid post data'
+            message: error.message
         })
+    } finally {
+        await session.endSession()
     }
 }
 
-// @desc    find posts by location
+// @desc    find posts by location and pagination
 // @route   GET /post
 // @access  Public
 const getPostBySearch = async (req, res) => {
-    
-    const { gender, addr, distRange } = req.query;
+
+    const { addr, distRange, page, limit } = req.query;
 
     try {
         const loc = await geocoder.geocode(addr);
-        const posts = await Post
-            .find()
-            .findByGender(gender)
-            .findByLocation(
-                [loc[0].longitude, loc[0].latitude],
-                distRange);
 
-        const result = posts.filter((post) => (
-            post.house !== null
-        ))
+        var aggregate =  Post.aggregate([
+            {
+                $lookup: {
+                    from: 'houses',
+                    localField: 'house',
+                    foreignField: '_id',
+                    pipeline: [
+                        {
+                            $match: {
+                                location: {
+                                    $geoWithin: {
+                                        $centerSphere: [
+                                            [loc[0].longitude, loc[0].latitude],
+                                            kmToRadius(distRange)
+                                        ]
+                                    }
+                                },
+                            }
+                        },
+                    ],
+                    
+                    as: 'house_detail'
+                }
+            },
+            {
+                $match: {
+                    "house_detail": {$ne: []}
+                }
+            }
+        ])
+
+        const options = {
+            page,
+            limit,
+            sort: '-createdAt'
+        }
+
+        const posts = await Post.aggregatePaginate(aggregate, options)
 
         res.status(200).send({
             success: true,
-            count: result.length,
-            data: result
+            count: posts.totalDocs,
+            totalPages: posts.totalPages,
+            requestedAddr: loc[0].formattedAddress,
+            posts: posts.docs
         });
-        
+
     } catch (error) {
         res.status(400).send({
             success: false,
@@ -69,46 +124,8 @@ const getPostBySearch = async (req, res) => {
 
 }
 
-// @desc    User becomes interested in post
-// @route   UPDATE /post/like/:post_id
-// @access  Private
-const postInterest = async (req, res) => {
 
-    try {
-        const post = await Post.findById(req.params.post_id);
-
-        if (post.createdBy == req.user.id) {
-            // User can't be the post creater
-            throw new Error('Cant like your own post')
-        } else if (post.interestedBy.includes(req.user.id)) {
-            // User can't repeately like a post
-            throw new Error('You have liked this post') 
-        } else {
-            post.interestedBy.push(req.user.id);
-            await post.save();
-            res.status(200).send({
-                success: true,
-                data: post
-            })
-        }
-    } catch (error) {
-        res.status(200).send({
-            success: false,
-            message: error.message
-        })
-    }
-    
-
-    Post.findByIdAndUpdate(
-        req.params.post_id,
-        {
-            "$push": {"interestedBy": req.user.id}
-        }
-    );
-}
-
-export { 
-    createPost, 
-    getPostBySearch, 
-    postInterest 
+export {
+    createPost,
+    getPostBySearch,
 };

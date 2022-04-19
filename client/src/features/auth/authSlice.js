@@ -29,10 +29,24 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
     }
 })
 
-export const logout = createAsyncThunk('auth/logout',
-    async () => {
-        await authService.logout()
-    })
+export const getMe = createAsyncThunk('getMe', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.getMe(token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const getUserById = createAsyncThunk('getUserById', async (user_id, thunkAPI) => {
+    try {
+        return await authService.getUserById(user_id)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -43,6 +57,10 @@ export const authSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.message = ''
+        },
+        logout: (state) => {
+            authService.logout()
+            state.user = null
         }
     },
     extraReducers: (builder) => {
@@ -53,7 +71,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload.user
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false
@@ -68,7 +86,7 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload.user
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false
@@ -77,11 +95,24 @@ export const authSlice = createSlice({
                 state.user = null
             })
 
-            .addCase(logout.fulfilled, (state) => {
-                state.user = null
+            .addCase(getMe.pending, (state) => {
+                state.isLoading = true
             })
+            .addCase(getMe.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                const {token} = state.user
+                state.user = action.payload.user
+                state.user.token = token
+            })
+            .addCase(getMe.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+
     }
 })
-export const { reset } = authSlice.actions
+export const { reset, logout } = authSlice.actions
 export default authSlice.reducer
 

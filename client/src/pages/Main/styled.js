@@ -2,7 +2,8 @@ import styled from "styled-components";
 import bg from '../../assets/images/bg02.jpg'
 
 export const BackgroundImg = styled.div`
-  background-image: url(${bg});
+  // background-image: url(${bg});
+  background: linear-gradient(to right top, #8360c3, #2ebf91);
   z-index: 1;
   background-size: cover;
   

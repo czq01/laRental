@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 
 export const Container = styled.div`
   // Self
-  height: calc(100vh - 40px);
+  height: calc(100vh - 80px);
   position: relative;
   z-index: 100;
 

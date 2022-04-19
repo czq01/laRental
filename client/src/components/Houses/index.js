@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ThemeProvider } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -5,7 +9,6 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '../Pagination';
 import Grid from '@mui/material/Grid';
-import { useState } from 'react'
 
 import { theme } from '../MuiTheme'
 import {
@@ -18,39 +21,92 @@ import {
 } from './styled'
 import HouseDetail from '../HouseDetail';
 import HouseCard from '../HouseCard';
-
-const mock_houses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
+import { getHouseBySearch, updateHouseLikes } from '../../features/houses/houseSlice';
+import { getMe } from '../../features/auth/authSlice'
 function Houses() {
 
-  const [showDetail, setShowDetail] = useState(false);
-
-  const toggleShowDetail = () => {
-    setShowDetail(!showDetail)
+  const { user } = useSelector((state) => (state.auth))
+  const { data:{houses, totalPages, requestedAddr},
+  isError, isSuccess, isLoading, message } = useSelector((state)=>(state.houses))
+  const { search:{addr, distRange, priceRange, amenities} } = useSelector((state)=>(state.search))
+  
+  const dispatch = useDispatch()
+  const [page, setPage] = useState(1)
+  const onPageChange = (event, value) => {
+    setPage(value)
   }
+  // Watch page changes
+  useEffect(()=>{
+    if (isError) {
+      toast.error(message)
+    }
+    dispatch(getHouseBySearch({
+      addr,
+      distRange,
+      priceRange,
+      amenities,
+      page,
+      limit: 10,
+    }))
+  }, [page])
+  
+  
+  const [showDetail, setShowDetail] = useState(false);
+  const [houseDetail, setHouseDetail] = useState();
+
+  const toggleShowDetail = (house) => {
+    setHouseDetail(house)
+    setShowDetail((prev) => (!prev))
+  }
+
+  const handleLikeHouse = (house_id) => {
+    dispatch(updateHouseLikes(house_id)).then(() => {
+      dispatch(getMe())
+    })
+  }
+
+  useEffect(() => {
+    setHouseDetail((prev) => (
+      prev ? houses.filter((house) => (house._id === prev._id))[0] : null
+    ))
+  }, [houses])
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message)
+    }
+  }, [isError, message])
 
   return (
     <ThemeProvider theme={theme}>
+      {showDetail ? 
       <HouseDetail
         toggleShowDetail={toggleShowDetail}
-        showDetail={showDetail}
-      />
+        houseDetail={houseDetail}
+        handleLikeHouse={handleLikeHouse}
+      /> : null}
       <Container showDetail={showDetail}>
         <LocationInfo>
           <LocationOnIcon
             color='primary'
             fontSize='small'
           />
-          <p>
-            University of Southern California
+          <p style={{fontSize: 'smaller'}}>
+            {requestedAddr}
           </p>
         </LocationInfo>
         <FuncBtns>
           <Stack spacing={2} direction="row">
-            <Button variant="text" size="small">Edit Loc</Button>
-            <Button variant="text" size="small">Edit Filter</Button>
+            <Button 
+              variant="text" 
+              size="small" 
+              component={Link}
+              to='/main/search'>Edit Loc</Button>
+            <Button variant="text" 
+              size="small" 
+              component={Link}
+              to='/main/filter'>Edit Filter</Button>
             <StyledSelect
-
               value={'Price'}
               label="Age"
               variant='outlined'
@@ -68,21 +124,26 @@ function Houses() {
             columns={{ xs: 4, sm: 9, md: 12 }}
             justifyContent='flex-start'
             alignItems='center'>
-            {mock_houses.map((item, index) => (
+            {houses.map((house, index) => (
               <Grid
                 item
                 xs={2} sm={3} md={3}
-                key={index}
+                key={house._id}
               >
                 <HouseCard
-                  toggleShowDetail={toggleShowDetail}
+                  key={house._id}
+                  house={house}
+                  toggleShowDetail={() => toggleShowDetail(house)}
                 />
               </Grid>
             ))}
           </Grid>
         </GridWrapper>
         <PageWrapper>
-          <Pagination />
+          <Pagination 
+            page={page}
+            count={totalPages}
+            onPageChange={onPageChange}/>
         </PageWrapper>
       </Container>
     </ThemeProvider>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ThemeProvider } from '@mui/material/styles';
 
@@ -17,15 +18,22 @@ import { Button } from '../Button.styled'
 
 function SearchLoc() {
 
-  const [loc, setLoc] = useState('')
+  const { search: {addr} } = useSelector((state) => (state.search))
+
+  const [loc, setLoc] = useState(addr ? addr : '')
 
   const onChange = (e) => {
     setLoc(e.target.value)
   }
 
   const dispatch = useDispatch()
-  const onClick = () => {
-    dispatch(updateSearch({'addr': loc}))
+  const onClick = (e) => {
+    if (!loc) {
+      e.preventDefault()
+      toast.error("Location can not be empty...")
+    } else {
+      dispatch(updateSearch({'addr': loc}))
+    }
   }
 
   return (
@@ -42,7 +50,7 @@ function SearchLoc() {
         </HeaderWrapper>
         <SearchWrapper>
           <Input 
-            placeholder="University of Southern California" 
+            placeholder={addr ? addr : "University of Southern California" }
             onChange={onChange}/>
           <BtnWrapper>
             <Button

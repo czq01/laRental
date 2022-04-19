@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-
 import SignUp from '../../components/SignUp'
 import SignIn from '../../components/SignIn'
 import {

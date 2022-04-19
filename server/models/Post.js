@@ -1,22 +1,15 @@
 import mongoose from "mongoose";
+import mongoose_delete from 'mongoose-delete'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 const PostSchema = mongoose.Schema({
     type: {
         type: 'String',
         enum: ['transfer', 'roommate']
     },
-    house: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'House'
+    desc: {
+        type: 'String'
     },
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    interestedBy: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
     requirements: {
         people: [{
             type: 'String',
@@ -27,35 +20,36 @@ const PostSchema = mongoose.Schema({
             maxLength: 120,
         }
     },
-    desc: {
-        type: 'String'
+    confirmed: {
+        type: Number,
     },
     complete: {
         type: mongoose.Schema.Types.Boolean,
         default: false
     },
+
+    // Relationships
+    // Hosue resource attached to this post
+    house: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'House',
+        require: [true, "Please attach a house resource"]
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    requestedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Request'
+    }],
 }, { timestamps: true });
 
-PostSchema.query.findByLocation = function(coords, meters) {
-    return this.populate({
-        path: 'house',
-        match: {
-            location: {
-                $nearSphere: {
-                    $geometry: {
-                        type: "point",
-                        coordinates: [
-                            coords[0],
-                            coords[1]
-                        ]
-                    },
-                    $maxDistance: meters
-                }
-            },
-        },
-        select: '-_id'
-    });
-}
+// Add soft delete plugin
+PostSchema.plugin(mongoose_delete, { overrideMethods: 'all' })
+
+// Add pagination plugin
+PostSchema.plugin(aggregatePaginate)
 
 PostSchema.query.findByGender = function(gender) {
     return this.find({

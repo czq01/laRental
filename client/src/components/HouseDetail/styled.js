@@ -20,11 +20,18 @@ export const Container = styled.div`
 export const DetailWrapper = styled.div`
   position: relative;
   height: 600px;
-  width: 650px;
-  background: black;
+  width: 800px;
+  background: rgba(255,255,255,0.3);
   border-radius: 10px;
-  display: grid;
-  grid-template-rows: 1fr 3fr 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 50px 50px;
+
+  & p {
+    font-size: large;
+  }
 `
 
 export const DetailClose = styled(MdClose)`

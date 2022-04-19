@@ -64,7 +64,10 @@ function SearchFilter() {
       }
       dispatch(updateSearch(searchParams))
 
-      dispatch(getHouseBySearch({addr, ...searchParams}))
+      searchParams.addr = addr
+      searchParams.page = 1
+      searchParams.limit = 10 // default 
+      dispatch(getHouseBySearch(searchParams))
   }
 
   return (

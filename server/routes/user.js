@@ -1,17 +1,22 @@
 import express from "express";
 import { 
-    getMe, 
+    getMe,
     getUserById, 
     loginUser, 
-    registerUser,  
+    registerUser,
+    updateUserById,  
 } from "../controllers/user.js";
 import { protect } from "../middleware/authMid.js";
 const userRouter = express.Router();
 
-userRouter.post('/', registerUser);
-userRouter.post('/login', loginUser);
+userRouter.route('/')
+        .post(registerUser)
 
-userRouter.get('/:user_id', getUserById);
-userRouter.get('/me', protect, getMe);
+userRouter.post('/login', loginUser);
+userRouter.get('/me', protect, getMe)
+
+userRouter.route('/:user_id')
+        .get(getUserById)
+        .put(protect, updateUserById)
 
 export default userRouter;

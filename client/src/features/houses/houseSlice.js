@@ -1,8 +1,13 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit"
 import houseService from "./houseService"
 
 const initialState = {
-  houses: [],
+  data: {
+    count: 0,
+    totalPages: 0,
+    requestedAddr: '',
+    houses: []
+  },
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -13,6 +18,23 @@ export const getHouseBySearch = createAsyncThunk('main/houses',
   async (search, thunkAPI) => {
     try {
       return await houseService.getHouseBySearch(search)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      // console.log(message)
+      return thunkAPI.rejectWithValue(message)
+    }
+  })
+
+export const updateHouseLikes = createAsyncThunk('updateHouseLikes',
+  async (house_id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await houseService.updateHouseLikes(house_id, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -43,12 +65,31 @@ export const houseSlice = createSlice({
       .addCase(getHouseBySearch.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.houses = action.payload.data
+        state.data = action.payload.data
       })
       .addCase(getHouseBySearch.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
-        state.message = action.payload.message
+        state.message = action.payload
+        state.houses = []
+      })
+      .addCase(updateHouseLikes.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateHouseLikes.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        
+        const house = state.data.houses.find((house) => (
+          house._id == action.payload.house._id
+        ))
+        
+        house.likes = action.payload.house.likes
+      })
+      .addCase(updateHouseLikes.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
         state.houses = []
       })
   }

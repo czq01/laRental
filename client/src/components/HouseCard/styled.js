@@ -15,37 +15,11 @@ export const Container = styled.div`
   @media screen and (max-width: 1000px){
     height: 170px
   }
-  
-/*   
-  &::before {
-    content:'';
-    position: absolute;
-    bottom: 40%;
-    left: 10%;
-    width: 50%;
-    height: 50%;
-    background: radial-gradient(circle at 50% 50%,#59c173, #a17fe0, #5d26c1);
-    border-radius: 50% 22% 40% 80%;
-    filter: blur(45px);
-    // opacity: 0.2;
-  } */
-/* 
-  &::after {
-    content:'';
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    width: 50%;
-    height: 50%;
-    background: radial-gradient(circle at 50% 50%,#a8ff78, #78ffd6);
-    border-radius: 50% 22% 40% 80%;
-    filter: blur(30px);
-  } */
 `
 export const Card = styled.div`
   height: 100%;
   width: 100%;
-  // border-radius: 30px;
+  border-radius: 10px;
   position: relative;
   padding: 20px 20px;
   background: rgba(0, 0, 0, 0.2);

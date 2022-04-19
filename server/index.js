@@ -7,6 +7,7 @@ import config from './config.js';
 import houseRouter from './routes/house.js';
 import userRouter from './routes/user.js';
 import postRouter from './routes/post.js';
+import requestRouter from './routes/request.js';
 
 // connect to cloud MongoDB
 mongoose.connect(config.mongo_url);
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 app.use('/house', houseRouter);
 app.use('/user', userRouter);
 app.use('/post', postRouter);
+app.use('/request', requestRouter)
 
 app.listen(config.port, 
     () => console.log(`Server running on port: http://localhost:${config.port}`));

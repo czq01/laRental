@@ -19,6 +19,7 @@ export const Form = styled.div`
   height: auto;
   background: rgba(255,255,255,0.3);
   border-radius: 20px;
+  margin-bottom: 50px;
   
   display: flex;
   flex-direction: column;
@@ -30,6 +31,7 @@ export const Form = styled.div`
 export const HeaderWrapper = styled.div`
   width: 100%;
   height: auto;
+  margin-bottom: -100px;
 
   display: flex;
   align-items: center;

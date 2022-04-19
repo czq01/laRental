@@ -1,9 +1,15 @@
 import { StyledPagination } from "./styled"
 
-function Pagination() {
+function Pagination({page, count, onPageChange}) {
   return (
     <>
-      <StyledPagination count={10} color="primary" variant="text"/>
+      <StyledPagination 
+        page={page}
+        count={count} 
+        onChange={onPageChange}
+        defaultPage={1}
+        color="primary" 
+        variant="text"/>
     </>
   )
 }

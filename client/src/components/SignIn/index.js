@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import Stack from '@mui/material/Stack';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import { ThemeProvider } from '@mui/material/styles';
 
+import { theme } from '../MuiTheme'
 import { login, reset } from '../../features/auth/authSlice'
 import { Form } from '../Form.styled'
 import { Input, FormWrapper } from './styled'
@@ -15,7 +19,7 @@ function SignIn() {
     password: '',
   })
 
-  const { email, password} = formData;
+  const { email, password } = formData;
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -26,34 +30,41 @@ function SignIn() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isError, isSuccess, message} = useSelector((state)=>state.auth)
+  const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
-  useEffect(()=>{
-    if(isError){
+  useEffect(() => {
+    if (isError) {
 
       toast.error(message)
     }
 
-    if(isSuccess){
+    if (isSuccess) {
       navigate('/main/search')
+      dispatch(reset())
     }
 
-    dispatch(reset())
 
-  }, [user,isError, isSuccess, isLoading, message, navigate, dispatch])
+
+  }, [user, isError, isSuccess, isLoading, message, navigate, dispatch])
 
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const userData = {
-      email,
-      password
+    if (!email) {
+      toast.error("Eamil can not be emtpy")
+    } else if (!password) {
+      toast.error("Password can not be empty")
+    } else {
+      const userData = {
+        email,
+        password
+      }
+      dispatch(login(userData))
     }
-    dispatch(login(userData))
   }
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <FormWrapper>
         <Form onSubmit={onSubmit}>
           <Input
@@ -80,7 +91,7 @@ function SignIn() {
           Sign In
         </Button>
       </FormWrapper>
-    </>
+    </ThemeProvider>
   )
 }
 

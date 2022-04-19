@@ -9,6 +9,9 @@ export const theme = createTheme({
       main: '#69f0ae',
       darker: '#053e85',
     },
+    secondary: {
+      main: '#ffff'
+    },
     neutral: {
       main: '#64748B',
       contrastText: '#fff',
@@ -29,6 +32,21 @@ export const theme = createTheme({
           color: 'white',
         },
       }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          background: "rgba(255, 255, 255, 0.3)",
+          color: 'white',
+        }
+      }
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          color: 'whitesmoke',
+        }
+      }
     }
-  }
+  },
 });

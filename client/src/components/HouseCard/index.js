@@ -4,14 +4,15 @@ import {
 
 } from "./styled"
 
-function HouseCard({toggleShowDetail}) {
+function HouseCard({toggleShowDetail, 
+  house:{distance,price,location: {formattedAddr}}}) {
   return (
     <>
       <Container>
         <Card onClick={toggleShowDetail}>
-          <h1> {"<"} 100m</h1>
-          <h2> <span>$2200</span> / month</h2>
-          <p>1423 South New Hampshire Ave, Los Angeles</p>
+          <h1> {(distance < 1) ? `${distance * 1000}m` : `${distance}km`}</h1>
+          <h2> <span>{`$${price}`}</span> / month</h2>
+          <p>{formattedAddr}</p>
         </Card>
       </Container>
     </>
