@@ -61,6 +61,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
       <Container onClick={closeDetail} ref={detailRef}>
         <DetailWrapper>
           <DetailClose onClick={toggleShowDetail} />
+          
           <Stack direction="row" spacing={2} alignItems='center'>
             <GpsFixedIcon color='primary' />
             <p>{location.formattedAddr}</p>

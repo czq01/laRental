@@ -23,7 +23,8 @@ const createPost = async (req, res) => {
         // Create post
         const post = (await Post.create([{
             type,
-            house,
+            house: house._id,
+            location: house.location,
             requirements,
             desc,
             createdBy,
@@ -68,33 +69,17 @@ const getPostBySearch = async (req, res) => {
     try {
         const loc = await geocoder.geocode(addr);
 
-        var aggregate =  Post.aggregate([
+        const aggregate =  Post.aggregate([
             {
-                $lookup: {
-                    from: 'houses',
-                    localField: 'house',
-                    foreignField: '_id',
-                    pipeline: [
-                        {
-                            $match: {
-                                location: {
-                                    $geoWithin: {
-                                        $centerSphere: [
-                                            [loc[0].longitude, loc[0].latitude],
-                                            kmToRadius(distRange)
-                                        ]
-                                    }
-                                },
-                            }
-                        },
-                    ],
-                    
-                    as: 'house_detail'
-                }
-            },
-            {
-                $match: {
-                    "house_detail": {$ne: []}
+                $geoNear: {
+                    near: {
+                        type: "point",
+                        coordinates: [loc[0].longitude, loc[0].latitude],
+                    },
+                    maxDistance: Number(distRange),
+                    distanceField: "dist",
+                    // query,
+                    spherical: true
                 }
             }
         ])
@@ -106,6 +91,10 @@ const getPostBySearch = async (req, res) => {
         }
 
         const posts = await Post.aggregatePaginate(aggregate, options)
+
+        posts.docs.forEach(doc => {
+            doc.dist = doc.dist.toFixed(1)
+        });
 
         res.status(200).send({
             success: true,
@@ -121,8 +110,8 @@ const getPostBySearch = async (req, res) => {
             message: error.message
         });
     }
-
 }
+
 
 
 export {

@@ -3,6 +3,7 @@ import express from "express";
 import { 
     addHouse, 
     attachedByPost, 
+    getHouseById, 
     getHouseBySearch,
     getHousesByLoc,
     updateHouseLikes,
@@ -18,7 +19,7 @@ houseRouter
     .post(addHouse)
 
 houseRouter.get('/loc', getHousesByLoc)
-
+houseRouter.get('/:house_id', getHouseById)
 houseRouter.put('/post/:house_id', protect, attachedByPost)
 houseRouter.put('/likes/:house_id', protect, updateHouseLikes)
 

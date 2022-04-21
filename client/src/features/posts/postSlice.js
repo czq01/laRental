@@ -21,6 +21,18 @@ export const createPost = createAsyncThunk(
     }
   })
 
+export const getPostBySearch = createAsyncThunk(
+  'getPostBySearch',
+  async (searchData, thunkAPI) => {
+    try {
+      return await postService.getPostBySearch(searchData)
+    } catch (error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const postSlice = createSlice({
   name: 'post',
   initialState,
@@ -30,6 +42,12 @@ export const postSlice = createSlice({
       state.isLoading = false
       state.isError = false
       state.message = ''
+    },
+    updatePost: (state, action) => {
+      const postToUpdate = state.posts.find(post => (
+        post._id = action.payload.post
+      ))
+      postToUpdate.requestedBy.push(action.payload._id)
     }
   },
   extraReducers: (builder) => {
@@ -47,8 +65,22 @@ export const postSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+
+      .addCase(getPostBySearch.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getPostBySearch.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts = action.payload.posts
+      })
+      .addCase(getPostBySearch.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
   }
 })
 
-export const { reset } = postSlice.actions
+export const { reset, updatePost } = postSlice.actions
 export default postSlice.reducer

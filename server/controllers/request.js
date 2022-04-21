@@ -16,6 +16,8 @@ const createRequest = async (req, res) => {
     const post = await Post.findById(post_id)
     if (!post) throw Error("Post not exists.")
 
+    if (post.createdBy.equals(req.user._id)) throw Error("You are the author of this post.")
+
     const sender = await User.findById(req.user._id)
     if(!sender) throw Error("User not exists.")
     // Check whether current user has requested for this post
@@ -46,7 +48,7 @@ const createRequest = async (req, res) => {
 
     res.status(200).send({
       success: true,
-      data: request,
+      request,
     })
   } catch (error) {
 
@@ -72,7 +74,7 @@ const getRequestById = async (req, res) => {
 
     res.status(200).send({
       success: true,
-      data: request,
+      request,
     })
   } catch (error) {
     res.status(400).send({

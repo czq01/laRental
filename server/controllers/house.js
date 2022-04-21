@@ -137,6 +137,26 @@ const getHousesByLoc = async (req, res) => {
     }
 }
 
+// @Desc    Get house by house id
+// @route   GET /house/house_id
+// @Access  Public
+const getHouseById = async (req, res) => {
+    const { house_id } = req.params
+    try {
+        const house = await House.findById(house_id)
+        if (!house) throw Error("House not exist.")
+        res.status(200).send({
+            succes: true,
+            house,
+        })
+    } catch (error) {
+        res.status(400).send({
+            succes: false,
+            message: error.message
+        });
+    }
+}
+
 // @Desc    House attached by a post
 // @Route   PUT /house/post/:house_id
 // @Access  Private
@@ -219,4 +239,5 @@ export {
     attachedByPost,
     updateHouseLikes,
     getHousesByLoc,
+    getHouseById,
 };

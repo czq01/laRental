@@ -31,20 +31,18 @@ const PostSchema = mongoose.Schema({
     // Relationships
     // Hosue resource attached to this post
     house: {
-        house_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'House',
-            require: [true, "Please attach a house resource"]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'House',
+        require: [true, "Please attach a house resource"]
+    },
+    // normalize location for query
+    location: {
+        type: {
+            type: String,
+            enum: ['Point']
         },
-        // normalize location for query
-        location: {
-            type: {
-                type: String,
-                enum: ['Point']
-            },
-            coordinates: {
-                type: [Number],
-            },
+        coordinates: {
+            type: [Number],
         },
     },
     createdBy: {
@@ -57,16 +55,26 @@ const PostSchema = mongoose.Schema({
     }],
 }, { timestamps: true });
 
+// Add index on location for later GeoJson query
+PostSchema.index({ "location": '2dsphere' });
+
 // Add soft delete plugin
-PostSchema.plugin(mongoose_delete, { overrideMethods: 'all' })
+// *To use $geoNear aggregate, cannot override aggregate()
+PostSchema.plugin(mongoose_delete,
+    {
+        overrideMethods: [
+            'count', 'find', 'findOne', 'findOneAndUpdate', 'update'
+        ]
+    }
+)
 
 // Add pagination plugin
 PostSchema.plugin(aggregatePaginate)
 
-PostSchema.query.findByGender = function(gender) {
+PostSchema.query.findByGender = function (gender) {
     return this.find({
         "requirements.people": {
-            "$in" : [gender, 'none']
+            "$in": [gender, 'none']
         }
     });
 }

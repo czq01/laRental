@@ -25,6 +25,11 @@ const getHousesByLoc = async (locData) => {
   return response.data
 }
 
+const getHouseById = async (house_id) => {
+  const response = await axios.get(API_URL + `/${house_id}`)
+  return response.data
+}
+
 const updateHouseLikes = async (house_id, token) => {
 
   const config = {
@@ -56,7 +61,8 @@ const houseService = {
   getHouseBySearch,
   getHousesByLoc,
   updateHouseLikes,
-  sortHouseByPrice
+  sortHouseByPrice,
+  getHouseById,
 }
 
 export default houseService

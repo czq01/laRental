@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 80%;
-  height: 400px;
+  width: 70%;
+  height: 350px;
   border: 20px;
   border-radius: 20px;
-  background: rgba(0,0,0,0.4);
+  background: rgba(255,255,255,0.2);
   position: relative;
   margin-top: 20px;
 
@@ -23,6 +23,7 @@ export const Requirement = styled.p`
   align-self: center;
   color: #69f0ae;
   font-size: 20px;
+
 `
 
 export const Distance = styled.p`
@@ -49,7 +50,7 @@ export const Avatar = styled.img`
 `
 
 export const UserName = styled.div`
-  margin-left: 5px;
+  margin-left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -57,7 +58,7 @@ export const UserName = styled.div`
   color: white;
   font-size: 12px;
   & span{
-    color: grey; 
+    color: #A9A9A9; 
   }
 `
 
@@ -75,18 +76,21 @@ export const Comment = styled.div`
   grid-column: 1 / span 2;
 
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  font-size: small;
+  align-items: flex-start;
+  font-size: 14px;
   line-height: 23px;
   color: white;
+  margin-top: 5px;
 `
 
 export const OperationWrapper = styled.div`
   grid-row: 4;
-  grid-column: 1;
+  grid-column: 1 / span 2;
+  
 
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 `

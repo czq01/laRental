@@ -20,10 +20,29 @@ export const Container = styled.div`
 //   align-items: center;
 // `
 
+export const ImgWrapper = styled.div`
+  grid-column: 2;
+  grid-row: 2;
+
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+`
+
+export const SearchWrapper = styled.div`
+  grid-column: 1 / span 2;
+  grid-row: 1;
+
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-left: 10%;
+`
+
 
 export const Posts = styled.div`
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 2;
   /* border-left: #69f0ae 1px solid;
   border-right: #69f0ae 1px solid; */
 

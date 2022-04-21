@@ -23,7 +23,8 @@
     "react-scroll": "^1.8.6",
     "react-spring": "^9.4.4",
     "react-toastify": "^8.2.0",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "time-ago": "^0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
