@@ -36,7 +36,7 @@ import { createPost, reset } from '../../features/posts/postSlice'
 function CreatePost() {
 
   const {isSuccess, isLoading, isError, message} = useSelector((state) => (state.posts))
-
+  const { data:{houses}} = useSelector((state)=>(state.houses))
   const [alignment, setAlignment] = useState('roommate');
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -68,6 +68,7 @@ function CreatePost() {
   const [chosenHouse, setChosenHouse] = useState()
   const onChooseAddr = (house) => {
     setShowList(false)
+    console.log(house)
     setChosenHouse(house)
   }
 
@@ -137,6 +138,14 @@ function CreatePost() {
       return
     }
   }
+
+  useEffect(() => {
+    if (window.location.href.indexOf('?') != -1){
+      const addPost = window.location.href.substring(1+window.location.href.indexOf('?'),).replace(/%20/g, ' ')
+      const chosenHouse = {"_id": addPost, "addr": (houses.filter((house) => (house._id === addPost))[0]).location.formattedAddr}
+      setChosenHouse(chosenHouse)
+    }
+  },[houses])
 
   useEffect(() => {
     if (isError) {

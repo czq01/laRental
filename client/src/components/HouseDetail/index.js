@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 import Stack from '@mui/material/Stack';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -14,12 +15,13 @@ import Tooltip from '@mui/material/Tooltip';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import LinkIcon from '@mui/icons-material/Link';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
 import { Container, DetailClose, DetailWrapper } from './styled'
 
-function HouseDetail({ toggleShowDetail, handleLikeHouse,
+function HouseDetail({ toggleShowDetail, handleLikeHouse, 
   houseDetail: {
     _id,
   } }) {
@@ -42,6 +44,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
   } = thisHouse
 
   const detailRef = useRef();
+  const navigate = useNavigate()
   const closeDetail = e => {
     if (detailRef.current === e.target) {
       toggleShowDetail();
@@ -54,6 +57,10 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
     } else {
       handleLikeHouse(_id)
     }
+  }
+
+  const onClickToPost = () =>{
+    navigate('/main/post/create?'+ _id)
   }
 
   return (
@@ -143,6 +150,12 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
               <Tooltip title="More Info" placement="top">
                 <IconButton>
                   <LinkIcon color='primary' />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Add Post" placement="top">
+                <IconButton onClick={onClickToPost}>
+                  <PostAddIcon color='primary' />
                 </IconButton>
               </Tooltip>
 
