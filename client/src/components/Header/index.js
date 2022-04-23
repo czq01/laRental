@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -39,6 +40,11 @@ function Header({ headerTrans }) {
   const handleLogout = () => {
     dispatch(logout())
     dispatch(reset())
+  }
+
+  const navigate = useNavigate()
+  const onToDashboard = () => {
+    navigate('dashboard')
   }
 
   return (
@@ -102,7 +108,7 @@ function Header({ headerTrans }) {
                 anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
               >
                 <MenuItem>
-                  <ListItemIcon>
+                  <ListItemIcon onClick={onToDashboard}>
                     <ArticleIcon fontSize="small" color="primary" />
                   </ListItemIcon>
                   Profile

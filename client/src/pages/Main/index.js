@@ -9,6 +9,7 @@ import SearchLoc from "../../components/SearchLoc"
 import { BackgroundImg, BgFilter } from "./styled"
 import Community from '../../components/Community'
 import CreatePost from '../../components/CreatePost'
+import Dashboard from '../../components/Dashboard'
 
 function Main() {
 
@@ -41,6 +42,7 @@ function Main() {
         <Route path='/houses' element={<Houses />} />
         <Route path='/community' element={<Community />} />
         <Route path='/post/*' element={<CreatePost />} />
+        <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
     </>
   )
