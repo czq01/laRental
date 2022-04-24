@@ -5,13 +5,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Stack from '@mui/material/Stack';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import AppsIcon from '@mui/icons-material/Apps';
-import Chip from '@mui/material/Chip';
-import StarsIcon from '@mui/icons-material/Stars';
-import HomeIcon from '@mui/icons-material/Home';
-import LocalHotelIcon from '@mui/icons-material/LocalHotel';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import ManIcon from '@mui/icons-material/Man';
 import WomanIcon from '@mui/icons-material/Woman';
@@ -29,22 +22,19 @@ import requestService from '../../features/requests/requestService';
 import RequestSender from '../RequestSender';
 import RequestProgress from '../RequestProgress';
 import {updatePost} from '../../features/posts/postSlice'
+import HouseInfo from '../HouseInfo';
 
 function PostDetail({ post, house }) {
 
   const { user } = useSelector((state) => (state.auth))
-  const { posts } = useSelector((state) => (state.posts))
   const [alignment, setAlignment] = useState('post');
 
   const handleAlignChange = (_, newAlignment) => {
     setAlignment(newAlignment);
   };
 
-  const { type, desc, requirements: { people, comment },
+  const { desc, requirements: { people, comment },
     createdAt, requestedBy } = post
-
-  const { price, location, dist, amenities,
-    highlights, size, units, likes, } = house
   
   const [requests, setRequests] = useState([])
   useEffect(() => {
@@ -157,59 +147,7 @@ function PostDetail({ post, house }) {
             </Stack>
           </PostWrapper>
           : alignment === 'house' ? <HouseWrapper>
-            <Stack spacing={8}>
-              <Stack direction="row" spacing={2} alignItems='center'>
-                <GpsFixedIcon color='primary' />
-                <p>{location?.formattedAddr}</p>
-
-              </Stack>
-
-              <Stack direction="row" spacing={2} alignItems='center'>
-                <AttachMoneyIcon color='primary' />
-                <p>{price} / month</p>
-              </Stack>
-
-              <Stack direction="row" spacing={2} alignItems='center'>
-                <HomeIcon color='primary' />
-                <p>{size}</p>
-                <LocalHotelIcon color='primary' />
-                {units?.map((item, index) => (
-                  <p key={index}>{item}</p>
-                ))}
-              </Stack>
-
-              <Stack direction="row"
-                spacing={2}
-                alignItems='center'
-                flexWrap='wrap'
-              >
-                <AppsIcon color='primary' />
-                {amenities?.map((item, index) => (
-                  <Chip
-                    key={index}
-                    label={item}
-                    variant="outlined"
-                    color='secondary'
-                  />
-                ))}
-              </Stack>
-
-              <Stack direction="row"
-                spacing={2}
-                alignItems='center'
-                flexWrap='wrap'
-              >
-                <StarsIcon color='primary' />
-                {highlights?.map((item, index) => (
-                  <Chip
-                    key={index}
-                    label={item}
-                    variant="outlined"
-                    color='secondary'
-                  />
-                ))}
-              </Stack>
-            </Stack>
+            <HouseInfo house={house} spacing={8}/>
           </HouseWrapper> : 
           <RequestWrapper>
             <SendRequestWrapper>

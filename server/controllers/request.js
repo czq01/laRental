@@ -84,6 +84,30 @@ const getRequestById = async (req, res) => {
   }
 }
 
+// @Desc    Get requests by request ids
+// @Route   GET /request/ids?reqeust_ids=id1,id2
+// @Access  Public
+const getRequestsByIds = async (req, res) => {
+  const { request_ids } = req.query
+  const ids = request_ids.split(',')
+  try {
+      const populate_field = 'name email age gender occupation desc'
+      const requests = await Request.find({
+          '_id': { $in: ids.map((id) => (mongoose.Types.ObjectId(id))) }
+      }).populate('sender', populate_field)
+
+      res.status(200).send({
+          success: true,
+          requests
+      })
+  } catch (error) {
+      res.status(400).send({
+          succes: false,
+          message: error.message
+      });
+  }
+}
+
 // @desc    Post author handle request
 // @route   PUT /request/:request_id
 // @access  Private
@@ -151,6 +175,7 @@ const deleteRequest = async (req, res) => {
 export {
   createRequest,
   getRequestById,
+  getRequestsByIds,
   handleRequest,
   deleteRequest,
 }

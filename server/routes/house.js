@@ -5,6 +5,7 @@ import {
     attachedByPost, 
     getHouseById, 
     getHouseBySearch,
+    getHousesByIds,
     getHousesByLoc,
     updateHouseLikes,
  } from "../controllers/house.js";
@@ -19,6 +20,7 @@ houseRouter
     .post(addHouse)
 
 houseRouter.get('/loc', getHousesByLoc)
+houseRouter.get('/ids', getHousesByIds)
 houseRouter.get('/:house_id', getHouseById)
 houseRouter.put('/post/:house_id', protect, attachedByPost)
 houseRouter.put('/likes/:house_id', protect, updateHouseLikes)

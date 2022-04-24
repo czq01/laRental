@@ -20,9 +20,19 @@ const getPostBySearch = async (searchData) => {
   return response.data
 }
 
+const getPostsByIds = async (post_ids) => {
+  const ids_string = post_ids.join(',')
+  const response = await axios.get(
+    API_URL + '/ids',
+    {params: {post_ids: ids_string}}
+  )
+  return response.data
+}
+
 const postService = {
   createPost,
   getPostBySearch,
+  getPostsByIds,
 }
 
 export default postService

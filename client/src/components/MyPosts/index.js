@@ -1,0 +1,96 @@
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
+
+import Stack from '@mui/material/Stack';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Divider from '@mui/material/Divider';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import ta from 'time-ago'
+
+
+import { ThemeProvider } from '@mui/material/styles';
+
+import { theme } from '../MuiTheme'
+import postService from '../../features/posts/postService'
+import PostInfo from '../PostInfo';
+import RequestsReceived from '../RequestsReceived';
+
+function MyPosts({ user: { posts } }) {
+
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const [myPosts, setMyPosts] = useState([])
+
+  useEffect(() => {
+
+    // Definitions
+    const fetchPosts = async (post_ids) => {
+      try {
+        const posts = (await postService.getPostsByIds(post_ids)).posts
+        setMyPosts(posts)
+      } catch (error) {
+        toast.error(error.message || error)
+      }
+    }
+
+    // Calls
+    fetchPosts(posts)
+  }, [])
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Stack
+        spacing={2}
+        sx={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'flex-start',
+          padding: '30px 30px',
+        }}
+      >
+        {myPosts?.map((post, idx) => (
+          <Accordion
+            expanded={expanded === `panel${idx}`}
+            onChange={handleChange(`panel${idx}`)}
+            sx={{
+              background: 'transparent',
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon color='primary' />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>{
+                `${post.type === 'roommate' ? 'Find Roommates' : 'Transfer'} | 
+                ${ta.ago(post.createdAt)}`
+              }</Typography>
+            </AccordionSummary>
+            <AccordionDetails
+              sx={{ padding: '20px' }}>
+              <Stack spacing={4}>
+                <PostInfo post={post} spacing={4} />
+                <Divider />
+                <Stack direction='row' spacing={2} alignItems='center'>
+                  <MailOutlineIcon color='primary' />
+                  <span> Reqeusts Received: </span>
+                </Stack>
+                <RequestsReceived requestedBy={post.requestedBy} need={post.requirements.people?.length}/>
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Stack>
+    </ThemeProvider>
+  )
+}
+
+export default MyPosts

@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import House from '../models/House.js'
 import Post from '../models/Post.js';
 import User from '../models/User.js';
@@ -69,12 +71,12 @@ const getHouseBySearch = async (req, res) => {
             page,
             limit,
             lean: true  // set this to allow adding extra fields
-        } 
+        }
 
         if (sortBy) options.sort = `${asc_boolean ? '' : '-'}${sortBy}`
 
         const houses = await House.aggregatePaginate(aggregate, options)
-        
+
         houses.docs.forEach(doc => {
             doc.dist = doc.dist.toFixed(1)
         });
@@ -100,7 +102,7 @@ const getHouseBySearch = async (req, res) => {
 // @Route   GET /house/loc?addr={}&distRange={}
 // @Access  Private
 const getHousesByLoc = async (req, res) => {
-    const {addr, distRange} = req.query
+    const { addr, distRange } = req.query
     try {
         // geocode requested address
         const loc = await geocoder.geocode(addr);
@@ -118,11 +120,11 @@ const getHousesByLoc = async (req, res) => {
 
         const houses = await House.find(query).lean()
         const addrs = houses.map((house) => (
-            {   
+            {
                 _id: house._id,
                 addr: house.location.formattedAddr,
             }
-            
+
         ))
 
         res.status(200).send({
@@ -148,6 +150,29 @@ const getHouseById = async (req, res) => {
         res.status(200).send({
             succes: true,
             house,
+        })
+    } catch (error) {
+        res.status(400).send({
+            succes: false,
+            message: error.message
+        });
+    }
+}
+
+// @Desc    Get houses by house ids
+// @Route   GET /house/ids?house_ids=id1,id2
+// @Access  Public
+const getHousesByIds = async (req, res) => {
+    const { house_ids } = req.query
+    const ids = house_ids.split(',')
+    try {
+        const houses = await House.find({
+            '_id': { $in: ids.map((id) => (mongoose.Types.ObjectId(id))) }
+        })
+
+        res.status(200).send({
+            success: true,
+            houses
         })
     } catch (error) {
         res.status(400).send({
@@ -240,4 +265,5 @@ export {
     updateHouseLikes,
     getHousesByLoc,
     getHouseById,
+    getHousesByIds,
 };

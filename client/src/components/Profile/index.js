@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
-import { Container } from './styled';
 
 import { updateUserById, reset } from '../../features/auth/authSlice';
 function Profile({ rawUser }) {
@@ -74,7 +73,6 @@ function Profile({ rawUser }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container>
         <Stack spacing={10} sx={{ width: '60%' }}>
           <TextField
             label="Name"
@@ -123,7 +121,6 @@ function Profile({ rawUser }) {
             <Button variant="outlined" disabled={!modified} onClick={onSubmit}>save</Button>
           </Stack>
         </Stack>
-      </Container>
     </ThemeProvider>
   )
 }

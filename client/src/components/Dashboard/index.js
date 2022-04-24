@@ -8,8 +8,10 @@ import Box from '@mui/material/Box';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
-import { Container, TabContainer } from './styled';
+import { Container, ItemContainer, TabContainer } from './styled';
 import Profile from '../Profile';
+import MyHouses from '../MyHouses';
+import MyPosts from '../MyPosts';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -21,7 +23,7 @@ function TabPanel(props) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
-      style={{width: "100%"}}
+      style={{ width: "100%" }}
     >
       {value === index && (
         <TabContainer>
@@ -59,10 +61,12 @@ function Dashboard() {
     <ThemeProvider theme={theme}>
       <Container>
         <Box
-          sx={{ flexGrow: 1, 
-                display: 'flex', 
-                height: 'calc(100vh - 80px)'
-              }}
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            height: 'calc(100vh - 80px)',
+            overflow: 'auto',
+          }}
         >
           <Tabs
             orientation="vertical"
@@ -70,7 +74,7 @@ function Dashboard() {
             value={value}
             onChange={handleChange}
             aria-label="Vertical tabs example"
-            // sx={{ borderRight: 1, borderColor: 'divider', }}
+          // sx={{ borderRight: 1, borderColor: 'divider', }}
           >
             <Tab label="My Profile" {...a11yProps(0)} />
             <Tab label="My Liked Houses" {...a11yProps(1)} />
@@ -78,13 +82,20 @@ function Dashboard() {
             <Tab label="My Requests" {...a11yProps(3)} />
           </Tabs>
           <TabPanel value={value} index={0}>
-            <Profile rawUser={user}/>
+            <ItemContainer>
+              <Profile rawUser={user} />
+            </ItemContainer>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            My Liked Houses
+            <ItemContainer>
+              <MyHouses user={user} />
+            </ItemContainer>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            My Posts
+            <ItemContainer>
+              <MyPosts user={user} />
+            </ItemContainer>
+
           </TabPanel>
           <TabPanel value={value} index={3}>
             My Requests

@@ -164,8 +164,9 @@ const updateUserById = async (req, res) => {
 
         res.status(200).send({
             success: true,
-            data: userToUpdate
+            data: await User.findById(userToUpdate._id)
         })
+        
     } catch (error) {
         res.status(400).send({
             success: false,

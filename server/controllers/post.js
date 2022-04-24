@@ -112,9 +112,32 @@ const getPostBySearch = async (req, res) => {
     }
 }
 
+// @Desc    Get posts by house ids
+// @Route   GET /post/ids?post_ids=id1,id2
+// @Access  Public
+const getPostsByIds = async (req, res) => {
+    const { post_ids } = req.query
+    const ids = post_ids.split(',')
+    try {
+        const posts = await Post.find({
+            '_id': { $in: ids.map((id) => (mongoose.Types.ObjectId(id))) }
+        })
+
+        res.status(200).send({
+            success: true,
+            posts
+        })
+    } catch (error) {
+        res.status(400).send({
+            succes: false,
+            message: error.message
+        });
+    }
+}
 
 
 export {
     createPost,
     getPostBySearch,
+    getPostsByIds,
 };

@@ -1,3 +1,4 @@
+import { Backdrop } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
@@ -45,6 +46,19 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           color: 'whitesmoke',
+        }
+      }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          background: 'grey',
+          boxShadow: 'none',
+          borderRadius: '5px',
+          height: '170px',
+          padding: '0 35px',
+          justifyContent: 'space-evenly'
+          
         }
       }
     }
