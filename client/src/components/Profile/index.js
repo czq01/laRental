@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify'
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -6,6 +8,8 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
 import { Container } from './styled';
+
+import { updateUserById, reset } from '../../features/auth/authSlice';
 function Profile({ rawUser }) {
   const user = {
     ...rawUser,
@@ -24,7 +28,8 @@ function Profile({ rawUser }) {
   })
 
   const { name, email, age, gender, occupation, desc } = profileData;
-
+  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
   const onChange = (e) => {
     setProfileData((prevState) => ({
       ...prevState,
@@ -33,22 +38,39 @@ function Profile({ rawUser }) {
   }
 
   const [modified, setModified] = useState(false)
-  useEffect(() => {
 
+  useEffect(() => {
 
     if (!(user.name === name &&
       user.email === email &&
-      user.age === age &&
+      user.age == age &&
       user.gender === gender &&
       user.occupation === occupation &&
       user.desc === desc)) {
-        console.log(profileData)
-        console.log(user)
         setModified(true)
       } else {
         setModified(false)
       }
-  }, [profileData])
+
+    if (isSuccess) {
+        setModified(false)
+        dispatch(reset())
+      }
+    if (isError) {
+        toast.error(message)
+        dispatch(reset())
+    }
+  }, [profileData, isSuccess, isError])
+
+  
+  const onSubmit = (e) => {
+    e.preventDefault()
+    if (!name) {
+      toast.error("Name can not be emtpy!")
+    } else {
+      dispatch(updateUserById(profileData))
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -98,7 +120,7 @@ function Profile({ rawUser }) {
             onChange={onChange}
           />
           <Stack direction="row" justifyContent="flex-end">
-            <Button variant="outlined" disabled={!modified}>save</Button>
+            <Button variant="outlined" disabled={!modified} onClick={onSubmit}>save</Button>
           </Stack>
         </Stack>
       </Container>
