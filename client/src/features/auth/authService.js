@@ -22,7 +22,7 @@ const login = async(userData) => {
             'user', JSON.stringify(response.data.user)
             ) 
     }
-    
+
     return response.data
 }
 
@@ -50,12 +50,31 @@ const getUserById = async(user_id) => {
     return response.data
 }
 
+const updateUserById = async(user_id, userData, token)=>{
+    const config = {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      }
+    const response = await axios.put(API_URL + `/${user_id}`, userData, config)
+
+    if(response.data){
+        const new_user = response.data.data;
+        new_user.token = `${token}`;
+        localStorage.setItem(
+            'user', JSON.stringify(new_user)
+            ) 
+    }
+
+    return response.data
+}
 const authService = {
     register,
     logout,
     login,
     getMe,
     getUserById,
+    updateUserById,
 }
 
 export default authService

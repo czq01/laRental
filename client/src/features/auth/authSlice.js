@@ -48,6 +48,17 @@ export const getUserById = createAsyncThunk('getUserById', async (user_id, thunk
     }
 })
 
+export const updateUserById = createAsyncThunk('updateUserById', async (user, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        const user_id = thunkAPI.getState().auth.user._id
+        return await authService.updateUserById(user_id, user, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -111,6 +122,21 @@ export const authSlice = createSlice({
                 state.message = action.payload
             })
 
+            .addCase(updateUserById.pending, (state) => {               
+                state.isLoading = true
+            })
+            .addCase(updateUserById.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                const {token} = state.user
+                state.user = action.payload.data
+                state.user.token = token
+            })
+            .addCase(updateUserById.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
     }
 })
 export const { reset, logout } = authSlice.actions
