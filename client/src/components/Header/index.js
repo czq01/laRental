@@ -39,6 +39,7 @@ function Header({ headerTrans }) {
   const dispatch = useDispatch()
   const handleLogout = () => {
     dispatch(logout())
+    navigate('search')
     dispatch(reset())
   }
 

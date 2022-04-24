@@ -10,9 +10,13 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Chip from '@mui/material/Chip';
+import Modal from '@mui/material/Modal';
+
+
 
 import ta from 'time-ago'
 
@@ -21,6 +25,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../MuiTheme'
 import requestService from '../../features/requests/requestService';
 import RequestProgress from '../RequestProgress';
+import RequestUserDetail from '../RequestUserDetail';
 
 function RequestsReceived({ requestedBy, need }) {
 
@@ -31,6 +36,15 @@ function RequestsReceived({ requestedBy, need }) {
   };
 
   const [requests, setRequests] = useState([])
+
+  const [openModal, setOpenModal] = useState(false);
+  const [senderNow, setSenderNow] = useState(0);
+  const handleCloseModal = () => setOpenModal(false);
+  const handleOpenModal = (idx) =>{
+    setOpenModal(true);
+    setSenderNow(idx);
+  } ;
+
 
   useEffect(() => {
 
@@ -79,6 +93,7 @@ function RequestsReceived({ requestedBy, need }) {
           padding: '0 30px',
         }}
       >
+        
         {requests?.map((request, idx) => (
           <Accordion
             expanded={expanded === `panel${idx}`}
@@ -109,6 +124,24 @@ function RequestsReceived({ requestedBy, need }) {
                 <Stack direction='row' justifyContent='flex-end'>
                   {request.status === 'undecided' ?
                     <>
+                      {senderNow == idx ?
+                      <Modal
+                          open={openModal}
+                          onClose={handleCloseModal}
+                          BackdropProps={{
+                            style: {
+                              backdropFilter: 'blur(10px)'
+                            }
+                          }}
+                          >                
+                          <RequestUserDetail sender={request.sender}/>
+                        </Modal> : null}
+                      <Tooltip title="User Info" placement='top'>
+                        <IconButton
+                          >
+                          <AssignmentIndIcon onClick={()=>handleOpenModal(idx)} color='primary' />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title="Accept" placement='top'>
                         <IconButton
                           onClick={async () => await onHandleRequest(request._id, 'accepted')}>
