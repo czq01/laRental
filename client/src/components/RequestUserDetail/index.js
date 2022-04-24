@@ -25,25 +25,30 @@ function RequestUserDetail({ sender }) {
                         <p>{name}</p>
                     </Stack>
 
-                    <Stack direction="row" spacing={2} alignItems='center'>
+                    {(gender)?<Stack direction="row" spacing={2} alignItems='center'>
                         <BadgeIcon color='primary' />
                         <p>{gender}</p>  
-                    </Stack>
+                    </Stack>:null}
 
-                    <Stack direction="row" spacing={2} alignItems='center'>
+                    {(age)?<Stack direction="row" spacing={2} alignItems='center'>
                         <BadgeIcon color='primary' />
                         <p>{age} years old</p>   
-                    </Stack>
+                    </Stack>:null}
 
-                    <Stack direction="row" spacing={2} alignItems='center'>
+                    {(occupation)?<Stack direction="row" spacing={2} alignItems='center'>
                         <BadgeIcon color='primary' />
                         <p>{occupation}</p>   
-                    </Stack>
+                    </Stack>:null}
 
-                    <Stack direction="row" spacing={2} alignItems='center'>
+                    {(desc)?<Stack direction="row" spacing={2} alignItems='center'>
                         <DescriptionIcon color='primary' />
                         <p>{desc}</p>   
-                    </Stack>
+                    </Stack>:null}
+
+                    {(!(desc || age || occupation || gender))?<Stack direction="row" spacing={2} alignItems='center'>
+                        <DescriptionIcon color='primary' />
+                        <p>This user is lazy and did not fill in any other information!</p>   
+                    </Stack>:null}
                     
 
                     <Stack direction="row" spacing={2} alignItems='center'>
