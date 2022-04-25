@@ -37,22 +37,37 @@ function Houses() {
   }
   // Watch page changes
   useEffect(()=>{
+    console.log("页面渲染！page变成", page)
     if (isError) {
       toast.error(message)
     }
-    dispatch(getHouseBySearch({
-      addr,
-      distRange,
-      priceRange,
-      amenities,
-      page,
-      limit: 10,
-    }))
+    if (isSorting){
+      dispatch(sortHouseByPrice({
+        addr,
+        distRange,
+        priceRange,
+        amenities,
+        page,
+        limit: 10,
+        sortBy: "price",
+        asc: sortingAsc
+      }))
+    }else{
+      dispatch(getHouseBySearch({
+        addr,
+        distRange,
+        priceRange,
+        amenities,
+        page,
+        limit: 10,
+      }))
+    }
     dispatch(reset())
     
   }, [page])
   
-  
+  const [isSorting, setIsSorting] = useState(false);
+  const [sortingAsc, setSortingAsc] = useState(false); 
   const [showDetail, setShowDetail] = useState(false);
   const [houseDetail, setHouseDetail] = useState();
 
@@ -67,7 +82,20 @@ function Houses() {
     })
   }
 
+  const handleSort = () => {
+    setIsSorting(false)
+    dispatch(getHouseBySearch({
+      addr,
+      distRange,
+      priceRange,
+      amenities,
+      page,
+      limit: 10,
+    }))
+  }
   const sortByPrice = (asc) =>{
+    setIsSorting(true);
+    setSortingAsc(asc);
     dispatch(sortHouseByPrice({
       addr,
       distRange,
@@ -129,6 +157,7 @@ function Houses() {
             >
               <MenuItem value={'Price Ascending'} onClick={()=>{sortByPrice(true)}}>$ ↑</MenuItem>
               <MenuItem value={'Price Descending'} onClick={()=>{sortByPrice(false)}}>$ ↓</MenuItem>
+              <MenuItem value={'Price Descending'} onClick={handleSort}>Distance ↑</MenuItem>
             </StyledSelect>
           </Stack>
         </FuncBtns>
