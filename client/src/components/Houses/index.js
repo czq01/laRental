@@ -37,7 +37,6 @@ function Houses() {
   }
   // Watch page changes
   useEffect(()=>{
-    console.log("页面渲染！page变成", page)
     if (isError) {
       toast.error(message)
     }
