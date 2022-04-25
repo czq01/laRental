@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Chip from '@mui/material/Chip';
 import BackspaceIcon from '@mui/icons-material/Backspace';
-import Divider from '@mui/material/Divider';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';

@@ -43,6 +43,7 @@ export const SearchWrapper = styled.div`
 export const Posts = styled.div`
   grid-column: 2;
   grid-row: 2;
+  padding-top: 50px;
   /* border-left: #69f0ae 1px solid;
   border-right: #69f0ae 1px solid; */
 

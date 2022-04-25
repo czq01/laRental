@@ -12,7 +12,7 @@ import { theme } from '../MuiTheme'
 import { Container, UserWrapper} from "./styled"
 
 function RequestUserDetail({ sender }) {
-    const { age, desc, email, gender, name, occupation, _id} = sender
+    const { age, desc, email, gender, name, occupation,} = sender
   
     return (
       <ThemeProvider theme={theme}>

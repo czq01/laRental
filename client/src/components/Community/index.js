@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +11,8 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import Tooltip from '@mui/material/Tooltip';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,6 +24,7 @@ import PostCard from '../PostCard'
 import { theme } from '../MuiTheme'
 import PostDetail from '../PostDetail';
 import houseService from '../../features/houses/houseService';
+import { reset } from '../../features/posts/postSlice';
 
 function Community() {
 
@@ -44,15 +48,17 @@ function Community() {
       page,
       limit: 10 // 10 records once
     }
-    dispatch(getPostBySearch(searchData))
-    setShowPosts(true)
+    dispatch(getPostBySearch(searchData)).then(
+      setShowPosts(true)
+    )
   }
 
   useEffect(() => {
     if (isError) {
       toast.error(message)
     }
-  }, [isError])
+    dispatch(reset())
+  }, [isError, isSuccess])
 
   const [postFocused, setPostFocused] = useState()
   const [houseAttached, setHouseAttached] = useState()
@@ -68,7 +74,7 @@ function Community() {
       toast.error(error.message)
     }
     setOpenModal(true)
-    
+
   }
   const handleCloseModal = () => setOpenModal(false);
 
@@ -90,6 +96,11 @@ function Community() {
     scroll.scrollToTop();
   }
 
+  const navigate = useNavigate()
+  const toCreatePost = () => {
+    navigate('/main/post')
+  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,12 +114,13 @@ function Community() {
             }
           }}
         >
-          <PostDetail house={houseAttached} post={postFocused}/>
+          <PostDetail house={houseAttached} post={postFocused} />
         </Modal>
         <SearchWrapper>
           <Stack
             direction='row'
-            spacing={1}
+            spacing={.5}
+            alignItems='center'
           >
             <TextField
               sx={{ width: "30ch" }}
@@ -119,20 +131,27 @@ function Community() {
             <IconButton color="primary" onClick={onSearchLocClick}>
               <SearchIcon />
             </IconButton>
+            <Tooltip title="Send Post" arrow>
+              <IconButton
+                color="primary"
+                onClick={toCreatePost}>
+                <AddCircleIcon />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </SearchWrapper>
         {showPosts ?
           <Posts>
-            <IconButton
-              color="primary"
-              component={Link}
-              to='/main/post/create'>
-              <AddCircleIcon
-                sx={{ fontSize: 60 }} />
-            </IconButton>
+            {posts.length === 0 ?
+              <Stack direction='row' spacing={2} alignItems='center'>
+                < SentimentVeryDissatisfiedIcon color='primary' fontSize='large' />
+                <h1 style={{ color: 'white' }}>
+                  Ops. No posts around this location...
+                </h1>
+              </Stack> : null}
             {posts.map((post) => (
-              <PostCard 
-                onOpenModal={handleOpenModal} 
+              <PostCard
+                onOpenModal={handleOpenModal}
                 key={post._id}
                 post={post}
               />

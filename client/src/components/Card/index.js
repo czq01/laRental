@@ -27,6 +27,7 @@ import { Button } from '../Button.styled'
 function index({item: {
   id,
   name,
+  route,
   topline,
   headline,
   content,
@@ -43,7 +44,7 @@ function index({item: {
           <Content lightBg={lightBg}>{content}</Content>
           <BtnWrapper>
             <Button 
-              to={`main/${name}`}
+              to={`${route}`}
               primary={!lightBg}
               >{buttonLabel}
             </Button>

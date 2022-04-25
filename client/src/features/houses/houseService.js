@@ -7,6 +7,7 @@ const getHouseBySearch = async (searchData) => {
   let {addr, priceRange, distRange, amenities, page, limit} = searchData
   priceRange = priceRange.join()
   amenities = amenities.join()
+  distRange *= 1000
 
   const url = `${API_URL}?addr=${addr}&distRange=${distRange}&priceRange=${priceRange}&amenities=${amenities}&page=${page}&limit=${limit}`
 

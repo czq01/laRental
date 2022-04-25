@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import SignUp from '../../components/SignUp'
 import SignIn from '../../components/SignIn'
 import {
@@ -13,7 +13,8 @@ import {
 
 function Auth() {
 
-  const [isSignIn, setIsSignIn] = useState(true);
+  const {pathname} = useLocation()
+  const [isSignIn, setIsSignIn] = useState(pathname.endsWith('signin'));
 
   const toggleSign = () => {
     setIsSignIn(!isSignIn);

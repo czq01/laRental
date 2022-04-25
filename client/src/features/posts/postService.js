@@ -14,7 +14,7 @@ const createPost = async (token, postData) => {
 }
 
 const getPostBySearch = async (searchData) => {
-  const {addr, distRange, page, limit} = searchData
+  const {addr, distRange, page} = searchData
   const url = API_URL + `?addr=${addr}&distRange=${distRange}&page=${page}&limit=10`
   const response = await axios.get(url)
   return response.data

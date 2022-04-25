@@ -41,7 +41,7 @@ function Main() {
         <Route path='/filter' element={<SearchFilter />} />
         <Route path='/houses' element={<Houses />} />
         <Route path='/community' element={<Community />} />
-        <Route path='/post/*' element={<CreatePost />} />
+        <Route path='/post' element={<CreatePost />} />
         <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
     </>

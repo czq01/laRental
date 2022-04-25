@@ -124,7 +124,7 @@ function RequestsReceived({ requestedBy, need }) {
                 <Stack direction='row' justifyContent='flex-end'>
                   {request.status === 'undecided' ?
                     <>
-                      {senderNow == idx ?
+                      {senderNow === idx ?
                       <Modal
                           open={openModal}
                           onClose={handleCloseModal}

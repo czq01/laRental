@@ -15,7 +15,7 @@ export const Button = styled(Link)`
   )};
 
   color: ${({dark}) => (
-    dark ? '#010606' : '#fff' 
+    dark ? '#010606' : '#fff'
   )};
 
   font-size: ${({fontBig}) => (
@@ -35,7 +35,8 @@ export const Button = styled(Link)`
   &:hover {
     transition: all 0.15s ease-in-out;
     background: ${({primary}) => (
-    primary ? '#fff' : 'linear-gradient(25deg, #11998e, #38ef7d)'
+    primary ? 'linear-gradient(#ece9e6, #ffffff)' : 
+    'linear-gradient(25deg, #11998e, #38ef7d)'
   )};
     color: black;
   }

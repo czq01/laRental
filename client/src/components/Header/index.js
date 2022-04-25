@@ -108,8 +108,8 @@ function Header({ headerTrans }) {
                 transformOrigin={{ horizontal: 'left', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
               >
-                <MenuItem>
-                  <ListItemIcon onClick={onToDashboard}>
+                <MenuItem onClick={onToDashboard}>
+                  <ListItemIcon >
                     <ArticleIcon fontSize="small" color="primary" />
                   </ListItemIcon>
                   Profile
