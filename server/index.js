@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import path, {dirname} from 'path'
+
 
 import config from './config.js';
 import houseRouter from './routes/house.js';
@@ -23,5 +25,17 @@ app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/request', requestRouter)
 
-app.listen(config.port, 
+
+const __dirname = path.resolve()
+if (config.node_env === 'production') {
+    app.use(express.static(path.join(__dirname, '/client/build')))
+
+    app.get('*', (req, res) =>
+        res.sendFile(
+            path.resolve(__dirname, 'client', 'build', 'index.html')
+        )
+    )
+}
+
+app.listen(config.port,
     () => console.log(`Server running on port: http://localhost:${config.port}`));
