@@ -69,10 +69,14 @@ function MyPosts({ user: { posts } }) {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>{
-                `${post.type === 'roommate' ? 'Find Roommates' : 'Transfer'} | 
-                ${ta.ago(post.createdAt)}`
-              }</Typography>
+              <Stack direction='row' spacing={3} alignItems='center'>
+                <Typography>{
+                  `${post.type === 'roommate' ? 'Find Roommates' : 'Transfer'} `
+                }</Typography>
+                <Typography sx={{ color: '#d3d3d3', fontSize: '10px' }}>{
+                  `${ta.ago(post.createdAt)}`
+                }</Typography>
+              </Stack>
             </AccordionSummary>
             <AccordionDetails
               sx={{ padding: '20px' }}>

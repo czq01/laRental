@@ -108,6 +108,30 @@ const getRequestsByIds = async (req, res) => {
   }
 }
 
+// @Desc    Get current user's requests
+// @Route   GET /request/my
+// @Access  Private
+const getMyRequests = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    const requests = await Request.find({
+      '_id': { $in: user.requests.map(req => req.request) }
+    }).populate({
+      path: 'post',
+      populate: { path: 'house' }
+    })
+    res.status(200).send({
+      success: true,
+      requests
+  })
+  } catch (error) {
+    res.status(400).send({
+      succes: false,
+      message: error.message
+  });
+  }
+}
+
 // @desc    Post author handle request
 // @route   PUT /request/:request_id
 // @access  Private
@@ -178,4 +202,6 @@ export {
   getRequestsByIds,
   handleRequest,
   deleteRequest,
+  getMyRequests,
+
 }

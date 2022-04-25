@@ -117,6 +117,13 @@ const getPostBySearch = async (req, res) => {
 // @Access  Public
 const getPostsByIds = async (req, res) => {
     const { post_ids } = req.query
+    if (post_ids === '') {
+        res.status(200).send({
+            success: true,
+            posts: []
+        })
+        return
+    }
     const ids = post_ids.split(',')
     try {
         const posts = await Post.find({

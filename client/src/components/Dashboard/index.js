@@ -12,6 +12,7 @@ import { Container, ItemContainer, TabContainer } from './styled';
 import Profile from '../Profile';
 import MyHouses from '../MyHouses';
 import MyPosts from '../MyPosts';
+import MyRequests from '../MyRequests';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,10 +96,11 @@ function Dashboard() {
             <ItemContainer>
               <MyPosts user={user} />
             </ItemContainer>
-
           </TabPanel>
           <TabPanel value={value} index={3}>
-            My Requests
+            <ItemContainer>
+              <MyRequests />
+            </ItemContainer>
           </TabPanel>
         </Box>
       </Container>

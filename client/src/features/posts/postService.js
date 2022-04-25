@@ -21,7 +21,9 @@ const getPostBySearch = async (searchData) => {
 }
 
 const getPostsByIds = async (post_ids) => {
-  const ids_string = post_ids.join(',')
+  let ids_string = ''
+  if (post_ids.length !== 0) ids_string = post_ids.join(',')
+  
   const response = await axios.get(
     API_URL + '/ids',
     {params: {post_ids: ids_string}}
