@@ -22,6 +22,8 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import ArticleIcon from '@mui/icons-material/Article';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import Modal from '@mui/material/Modal';
+
 
 import { theme } from '../MuiTheme'
 import {
@@ -33,10 +35,11 @@ import {
 import { Button } from '../Button.styled'
 import houseService from '../../features/houses/houseService';
 import { createPost, reset } from '../../features/posts/postSlice'
+import AddHouse from '../AddHouse';
 function CreatePost() {
 
-  const {isSuccess, isLoading, isError, message} = useSelector((state) => (state.posts))
-  const { data:{houses}} = useSelector((state)=>(state.houses))
+  const { isSuccess, isLoading, isError, message } = useSelector((state) => (state.posts))
+  const { data: { houses } } = useSelector((state) => (state.houses))
   const [alignment, setAlignment] = useState('roommate');
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -100,34 +103,34 @@ function CreatePost() {
         desc,
       }
       if (alignment === 'roommate') {
-  
+
         if (male + female + other + none === 0) {
           toast.error("Roommate number is required.")
           return
         } else {
           const people = []
-  
+
           for (let i = 0; i < female; i++) {
             people.push('female');
           }
-  
+
           for (let i = 0; i < male; i++) {
             people.push('male');
           }
-  
+
           for (let i = 0; i < other; i++) {
             people.push('other');
           }
-  
+
           for (let i = 0; i < none; i++) {
             people.push('none');
           }
-  
+
           const requirements = {
             people,
             comment,
           }
-  
+
           postData.requirements = requirements
           console.log(postData)
           dispatch(createPost(postData))
@@ -140,12 +143,12 @@ function CreatePost() {
   }
 
   useEffect(() => {
-    if (window.location.href.indexOf('?') != -1){
-      const addPost = window.location.href.substring(1+window.location.href.indexOf('?'),).replace(/%20/g, ' ')
-      const chosenHouse = {"_id": addPost, "addr": (houses.filter((house) => (house._id === addPost))[0]).location.formattedAddr}
+    if (window.location.href.indexOf('?') != -1) {
+      const addPost = window.location.href.substring(1 + window.location.href.indexOf('?'),).replace(/%20/g, ' ')
+      const chosenHouse = { "_id": addPost, "addr": (houses.filter((house) => (house._id === addPost))[0]).location.formattedAddr }
       setChosenHouse(chosenHouse)
     }
-  },[houses])
+  }, [houses])
 
   useEffect(() => {
     if (isError) {
@@ -156,12 +159,40 @@ function CreatePost() {
     dispatch(reset())
   }, [isSuccess, isError, message,])
 
+  // Model for adding house resouce
+  const [openModal, setOpenModal] = useState(false);
 
+  const handleOpenModal =  () => {
+    setOpenModal(true)
+  }
+  const handleCloseModal = () => {
+    setOpenModal(false)
+  }
+
+  const onNewHouseAdded = (house) => {
+    setChosenHouse({
+      "_id": house._id,
+      "addr": house.location.formattedAddr,
+    })
+    setOpenModal(false)
+    setShowList(false)
+  }
 
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
+        <Modal
+          open={openModal}
+          onClose={handleCloseModal}
+          BackdropProps={{
+            style: {
+              backdropFilter: 'blur(20px)'
+            }
+          }}
+        >
+          <AddHouse onNewHouseAdded={onNewHouseAdded}/>
+        </Modal>
         <Form>
           <Stack spacing={15}
             alignItems='center'
@@ -228,7 +259,7 @@ function CreatePost() {
                       fontWeight: 'medium',
                       variant: 'body2',
                     }}
-                    primary={`Found ${addrs.length} record${addrs.length > 1 ? 's' : null}`}
+                    primary={`Found ${addrs.length} record${addrs.length > 1 ? 's' : ''}`}
                   />
                 </ListItem>
                 {addrs.map((item) => (
@@ -251,7 +282,7 @@ function CreatePost() {
                 ))}
                 <ListItem
                   secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton edge="end" onClick={handleOpenModal}>
                       <AddCircleIcon color='primary' />
                     </IconButton>
                   }

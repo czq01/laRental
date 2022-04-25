@@ -39,7 +39,7 @@ const HouseSchema = new mongoose.Schema({
         type: [String]
     },
     href: {
-        type: [String]
+        type: String
     },
 
     // Relationships

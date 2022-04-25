@@ -13,9 +13,15 @@ import { geocoder, distance, kmToRadius } from '../utils/geo.js';
 const addHouse = async (req, res) => {
     try {
         const house = await House.create(req.body);
-        res.send(house);
+        res.send({
+            success: true,
+            house,
+        });
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({
+            succes: false,
+            message: error.message
+        });
     }
 }
 

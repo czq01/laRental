@@ -40,6 +40,11 @@ const getHousesByIds = async (house_ids) => {
   return response.data
 }
 
+const addHouse = async (houseData) => {
+  const response = await axios.post(API_URL, houseData)
+  return response.data
+}
+
 const updateHouseLikes = async (house_id, token) => {
 
   const config = {
@@ -74,6 +79,7 @@ const houseService = {
   sortHouseByPrice,
   getHouseById,
   getHousesByIds,
+  addHouse,
 }
 
 export default houseService
