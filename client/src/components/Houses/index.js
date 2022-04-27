@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -9,6 +9,9 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '../Pagination';
 import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 
 import { theme } from '../MuiTheme'
 import {
@@ -23,24 +26,28 @@ import HouseDetail from '../HouseDetail';
 import HouseCard from '../HouseCard';
 import { getHouseBySearch, updateHouseLikes, reset, sortHouseByPrice } from '../../features/houses/houseSlice';
 import { getMe } from '../../features/auth/authSlice'
+import Loading from '../Loading';
+import NoData from '../NoData';
 function Houses() {
 
+  useEffect(() => {
+    dispatch(getMe())
+  }, [])
+
   const { user } = useSelector((state) => (state.auth))
-  const { data:{houses, totalPages, requestedAddr},
-  isError, isSuccess, isLoading, message } = useSelector((state)=>(state.houses))
-  const { search:{addr, distRange, priceRange, amenities} } = useSelector((state)=>(state.search))
-  
+  const { search: { addr, distRange, priceRange, amenities } } = useSelector((state) => (state.search))
+
   const dispatch = useDispatch()
   const [page, setPage] = useState(1)
   const onPageChange = (_, value) => {
     setPage(value)
   }
   // Watch page changes
-  useEffect(()=>{
+  useEffect(() => {
     if (isError) {
       toast.error(message)
     }
-    if (isSorting){
+    if (isSorting) {
       dispatch(sortHouseByPrice({
         addr,
         distRange,
@@ -51,7 +58,7 @@ function Houses() {
         sortBy: "price",
         asc: sortingAsc
       }))
-    }else{
+    } else {
       dispatch(getHouseBySearch({
         addr,
         distRange,
@@ -62,24 +69,38 @@ function Houses() {
       }))
     }
     dispatch(reset())
-    
+
   }, [page])
-  
+
+  const { data: { houses, totalPages, requestedAddr },
+    isError, isSuccess, isLoading, message } = useSelector((state) => (state.houses))
   const [isSorting, setIsSorting] = useState(false);
-  const [sortingAsc, setSortingAsc] = useState(false); 
-  const [showDetail, setShowDetail] = useState(false);
+  const [sortingAsc, setSortingAsc] = useState(false);
   const [houseDetail, setHouseDetail] = useState();
 
-  const toggleShowDetail = (house) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = (house) => {
     setHouseDetail(house)
-    setShowDetail((prev) => (!prev))
+    setOpenModal(true)
   }
+  const handleCloseModal = () => setOpenModal(false);
 
   const handleLikeHouse = (house_id) => {
     dispatch(updateHouseLikes(house_id)).then(() => {
       dispatch(getMe())
     })
   }
+
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
+    if (openModal) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [openModal]);
 
   const handleSort = () => {
     setIsSorting(false)
@@ -92,7 +113,7 @@ function Houses() {
       limit: 10,
     }))
   }
-  const sortByPrice = (asc) =>{
+  const sortByPrice = (asc) => {
     setIsSorting(true);
     setSortingAsc(asc);
     dispatch(sortHouseByPrice({
@@ -121,31 +142,60 @@ function Houses() {
 
   return (
     <ThemeProvider theme={theme}>
-      {showDetail ? 
-      <HouseDetail
-        toggleShowDetail={toggleShowDetail}
-        houseDetail={houseDetail}
-        handleLikeHouse={handleLikeHouse}
-      /> : null}
-      <Container showDetail={showDetail}>
+      <Container>
+        <Dialog
+          open={openModal}
+          onClose={handleCloseModal}
+          BackdropProps={{
+            style: {
+              backdropFilter: 'blur(10px)',
+            },
+          }}
+          maxWidth={false}
+          PaperProps={{
+            style: {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              minHeight: '600px',
+              width: '800px',
+              background: 'rgba(255,255,255,0.3)',
+              borderRadius: '10px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              rowGap: '10px',
+              aligItems: 'center',
+              padding: '50px 50px',
+            }
+          }}
+          scroll='body'      
+        >
+
+          <HouseDetail
+            houseDetail={houseDetail}
+            handleLikeHouse={handleLikeHouse}
+          />
+        </Dialog>
         <LocationInfo>
           <LocationOnIcon
             color='primary'
             fontSize='small'
           />
-          <p style={{fontSize: 'smaller'}}>
+          <p style={{ fontSize: 'smaller' }}>
             {requestedAddr}
           </p>
         </LocationInfo>
         <FuncBtns>
           <Stack spacing={2} direction="row">
-            <Button 
-              variant="text" 
-              size="small" 
+            <Button
+              variant="text"
+              size="small"
               component={Link}
               to='/main/search'>Edit Loc</Button>
-            <Button variant="text" 
-              size="small" 
+            <Button variant="text"
+              size="small"
               component={Link}
               to='/main/filter'>Edit Filter</Button>
             <StyledSelect
@@ -154,39 +204,44 @@ function Houses() {
               variant='outlined'
             // onChange={handleChange}
             >
-              <MenuItem value={'Price Ascending'} onClick={()=>{sortByPrice(true)}}>$ ↑</MenuItem>
-              <MenuItem value={'Price Descending'} onClick={()=>{sortByPrice(false)}}>$ ↓</MenuItem>
+              <MenuItem value={'Price Ascending'} onClick={() => { sortByPrice(true) }}>$ ↑</MenuItem>
+              <MenuItem value={'Price Descending'} onClick={() => { sortByPrice(false) }}>$ ↓</MenuItem>
               <MenuItem value={'Price Descending'} onClick={handleSort}>Distance ↑</MenuItem>
             </StyledSelect>
           </Stack>
         </FuncBtns>
         <GridWrapper>
-          <Grid
-            container
-            spacing={{ xs: 1, md: 4 }}
-            columns={{ xs: 4, sm: 9, md: 12 }}
-            justifyContent='flex-start'
-            alignItems='center'>
-            {houses.map((house, index) => (
-              <Grid
-                item
-                xs={2} sm={3} md={3}
-                key={house._id}
-              >
-                <HouseCard
-                  key={house._id}
-                  house={house}
-                  toggleShowDetail={() => toggleShowDetail(house)}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          {isLoading ? <Loading /> :
+            <Grid
+              container
+              spacing={{ xs: 1, md: 4 }}
+              columns={{ xs: 4, sm: 9, md: 12 }}
+              justifyContent='flex-start'
+              alignItems='center'>
+              {houses.length === 0 ?
+                <NoData
+                  message={"Ops, No house resources found near this location, try set a larger distance range..."}
+                /> :
+                houses.map((house) => (
+                  <Grid
+                    item
+                    xs={2} sm={3} md={3}
+                    key={house._id}
+                  >
+                    <HouseCard
+                      key={house._id}
+                      house={house}
+                      handleOpenModal={() => handleOpenModal(house)}
+                    />
+                  </Grid>
+                ))}
+            </Grid>}
         </GridWrapper>
         <PageWrapper>
-          <Pagination 
+          <Pagination
             page={page}
             count={totalPages}
-            onPageChange={onPageChange}/>
+            onPageChange={onPageChange} />
         </PageWrapper>
       </Container>
     </ThemeProvider>

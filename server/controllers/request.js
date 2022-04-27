@@ -89,6 +89,13 @@ const getRequestById = async (req, res) => {
 // @Access  Public
 const getRequestsByIds = async (req, res) => {
   const { request_ids } = req.query
+    if (request_ids === '') {
+        res.status(200).send({
+            success: true,
+            requests: []
+        })
+        return
+    }
   const ids = request_ids.split(',')
   try {
       const populate_field = 'name email age gender occupation desc'

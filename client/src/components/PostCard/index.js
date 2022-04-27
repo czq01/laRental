@@ -51,7 +51,8 @@ function PostCard({ onOpenModal, post }) {
     requirements: {
       people,
       comment
-    }
+    },
+    desc
   } = post
 
   const [author, setAuthor] = useState('')
@@ -77,7 +78,7 @@ function PostCard({ onOpenModal, post }) {
       <Container>
         <Requirement>
           <Stack direction="row" spacing={.5}>
-            {people.map((person) => {
+            {people?.map((person) => {
               if (person === 'male') {
                 return (
                   <Tooltip title="Male">
@@ -107,7 +108,7 @@ function PostCard({ onOpenModal, post }) {
           </Stack>
         </Requirement>
         <Distance>
-          {(dist < 1000) ? `${dist}m` : `${dist / 1000}km`}
+          {(dist < 1000) ? `${dist}m` : `${(dist / 1000).toFixed(1)}km`}
         </Distance>
         <UserInfo>
           <Avatar
@@ -125,7 +126,7 @@ function PostCard({ onOpenModal, post }) {
         </Type>
         <Comment>
           <p>
-            {comment}
+            {type === 'transfer'? desc : comment}
           </p>
         </Comment>
         <OperationWrapper>

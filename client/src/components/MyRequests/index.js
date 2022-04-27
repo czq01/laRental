@@ -25,6 +25,8 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
 import requestService from '../../features/requests/requestService';
+import NoData from '../NoData';
+import Loading from '../Loading';
 
 function MyRequests() {
 
@@ -34,7 +36,7 @@ function MyRequests() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [myRequests, setMyRequests] = useState([])
+  const [myRequests, setMyRequests] = useState()
 
   const { user: { token } } = useSelector((state) => (state.auth))
   useEffect(() => {
@@ -43,7 +45,7 @@ function MyRequests() {
     const fetchRequests = async () => {
       try {
         const requests = (await requestService.getMyRequests(token)).requests
-        setMyRequests(requests)
+        setMyRequests(requests.filter(req => req.deleted === false))
       } catch (error) {
         toast.error(error.message || error)
       }
@@ -82,15 +84,21 @@ function MyRequests() {
           height: '100%',
           width: '100%',
           justifyContent: 'flex-start',
-          padding: '30px 30px',
+          alignItems: 'center',
+          padding: '50px 30px',
         }}
       >
-        {myRequests?.filter(req => req.deleted === false).map((req, idx) => (
+        {myRequests?
+        myRequests.length === 0 ?
+        <NoData message={"You haven't sent any request..."} /> :
+        myRequests.map((req, idx) => (
           <Accordion
+            TransitionProps={{ unmountOnExit: true }}
             expanded={expanded === `panel${idx}`}
             onChange={handleChange(`panel${idx}`)}
             sx={{
               background: 'transparent',
+              width: '100%',
             }}
             key={req._id}
           >
@@ -156,7 +164,7 @@ function MyRequests() {
               </Stack>
             </AccordionDetails>
           </Accordion>
-        ))}
+        )) : <Loading />}
       </Stack>
     </ThemeProvider>
   )

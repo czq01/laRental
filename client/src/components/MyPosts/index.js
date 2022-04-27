@@ -18,6 +18,8 @@ import { theme } from '../MuiTheme'
 import postService from '../../features/posts/postService'
 import PostInfo from '../PostInfo';
 import RequestsReceived from '../RequestsReceived';
+import NoData from '../NoData';
+import Loading from '../Loading';
 
 function MyPosts({ user: { posts } }) {
 
@@ -27,7 +29,7 @@ function MyPosts({ user: { posts } }) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [myPosts, setMyPosts] = useState([])
+  const [myPosts, setMyPosts] = useState()
 
   useEffect(() => {
 
@@ -56,42 +58,47 @@ function MyPosts({ user: { posts } }) {
           padding: '30px 30px',
         }}
       >
-        {myPosts?.map((post, idx) => (
-          <Accordion
-            expanded={expanded === `panel${idx}`}
-            onChange={handleChange(`panel${idx}`)}
-            sx={{
-              background: 'transparent',
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon color='primary' />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Stack direction='row' spacing={3} alignItems='center'>
-                <Typography>{
-                  `${post.type === 'roommate' ? 'Find Roommates' : 'Transfer'} `
-                }</Typography>
-                <Typography sx={{ color: '#d3d3d3', fontSize: '10px' }}>{
-                  `${ta.ago(post.createdAt)}`
-                }</Typography>
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails
-              sx={{ padding: '20px' }}>
-              <Stack spacing={4}>
-                <PostInfo post={post} spacing={4} />
-                <Divider />
-                <Stack direction='row' spacing={2} alignItems='center'>
-                  <MailOutlineIcon color='primary' />
-                  <span> Reqeusts Received: </span>
-                </Stack>
-                <RequestsReceived requestedBy={post.requestedBy} need={post.requirements.people?.length}/>
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+        {myPosts ?
+          myPosts.length === 0 ?
+            <NoData message={"You haven't published any posts..."} /> :
+            myPosts.map((post, idx) => (
+              <Accordion
+                TransitionProps={{ unmountOnExit: true }}
+                expanded={expanded === `panel${idx}`}
+                onChange={handleChange(`panel${idx}`)}
+                sx={{
+                  background: 'transparent',
+                  width: '100%',
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon color='primary' />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Stack direction='row' spacing={3} alignItems='center'>
+                    <Typography>{
+                      `${post.type === 'roommate' ? 'Find Roommates' : 'Transfer'} `
+                    }</Typography>
+                    <Typography sx={{ color: '#d3d3d3', fontSize: '10px' }}>{
+                      `${ta.ago(post.createdAt)}`
+                    }</Typography>
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{ padding: '20px' }}>
+                  <Stack spacing={4}>
+                    <PostInfo post={post} spacing={4} />
+                    <Divider />
+                    <Stack direction='row' spacing={2} alignItems='center'>
+                      <MailOutlineIcon color='primary' />
+                      <span> Reqeusts Received: </span>
+                    </Stack>
+                    <RequestsReceived requestedBy={post.requestedBy} need={post.requirements.people?.length} />
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            )) : <Loading />}
       </Stack>
     </ThemeProvider>
   )

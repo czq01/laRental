@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ThemeProvider } from '@mui/material/styles';
@@ -11,12 +10,8 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import Stack from '@mui/material/Stack';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Tooltip from '@mui/material/Tooltip';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import Button from '@mui/material/Button';
 
 import { getPostBySearch } from '../../features/posts/postSlice';
 import { Container, ImgWrapper, Posts, ScrollTopWrapper, SearchWrapper } from "./styled"
@@ -25,6 +20,8 @@ import { theme } from '../MuiTheme'
 import PostDetail from '../PostDetail';
 import houseService from '../../features/houses/houseService';
 import { reset } from '../../features/posts/postSlice';
+import NoData from '../NoData';
+import Loading from '../Loading';
 
 function Community() {
 
@@ -142,14 +139,10 @@ function Community() {
         </SearchWrapper>
         {showPosts ?
           <Posts>
-            {posts.length === 0 ?
-              <Stack direction='row' spacing={2} alignItems='center'>
-                < SentimentVeryDissatisfiedIcon color='primary' fontSize='large' />
-                <h1 style={{ color: 'white' }}>
-                  Ops. No posts around this location...
-                </h1>
-              </Stack> : null}
-            {posts.map((post) => (
+            {isLoading ? <Loading /> :
+            posts.length === 0 ?
+              <NoData message={"Ops. No posts around this location..."}/> : 
+            posts.map((post) => (
               <PostCard
                 onOpenModal={handleOpenModal}
                 key={post._id}

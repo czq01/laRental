@@ -4,19 +4,19 @@ export const content = [
     name: 'search',
     route: 'main/search',
     topline: 'search',
-    headline: 'This is the headline for search section',
-    content: 'This is the content for search section This is the content for search section This is the content for search section',
+    headline: 'Search by address',
+    content: 'Find rental housing resouces near your ideal location from multiple rental agents',
     buttonLabel: 'Search Now',
     img: 'house.svg',
-    alt: 'Car'
+    alt: 'search'
   },
   {
     id: 2,
     name: 'sign up',
     route: 'auth/signup',
     topline: 'Sign Up',
-    headline: 'This is the headline for Sign Up section',
-    content: 'This is the content for Sign Up section This is the content for Sign Up section This is the content for Sign Up section',
+    headline: 'Join the community right now',
+    content: '',
     buttonLabel: 'Sign Up Now',
     img: 'welcome.svg',
     alt: 'Car'
@@ -26,8 +26,8 @@ export const content = [
     name: 'post',
     route: 'main/community',
     topline: 'Post',
-    headline: 'This is the headline for Post section',
-    content: 'This is the content for Post section This is the content for Post section This is the content for Post section',
+    headline: 'Public requests for roommates',
+    content: 'Find your ideal rootmates',
     buttonLabel: 'Post Now',
     img: 'post.svg',
     alt: 'Car'
@@ -37,8 +37,8 @@ export const content = [
     name: 'about',
     route: '/',
     topline: 'about',
-    headline: 'This is the headline for ABOUT section',
-    content: 'This is the content for ABOUT section This is the content for ABOUT section This is the content for ABOUT section',
+    headline: 'This is a DSCI551 project',
+    content: 'Group member: Jiaqi Liu, Ziquan Cheng, York Yao',
     buttonLabel: 'Go To Top',
     img: 'about.svg',
     alt: 'Car'

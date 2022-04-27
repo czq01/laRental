@@ -112,7 +112,7 @@ function Header({ headerTrans }) {
                   <ListItemIcon >
                     <ArticleIcon fontSize="small" color="primary" />
                   </ListItemIcon>
-                  Profile
+                  Dashboard
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>

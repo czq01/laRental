@@ -1,46 +1,25 @@
 import styled from "styled-components";
-import { MdClose } from 'react-icons/md';
-
-export const Container = styled.div`
-  top: 40;
-  left: 0;
-  width: 100%;
-  height: calc(100% - 40px);
-  position: fixed;
-  background: transparent;
-  color: white;
-  z-index: 30;
-
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 
 export const DetailWrapper = styled.div`
-  position: relative;
-  height: 600px;
-  width: 800px;
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
   background: rgba(255,255,255,0.3);
-  border-radius: 10px;
+  border-radius: 10px; */
+  min-height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  row-gap: 10px;
   align-items: flex-start;
-  padding: 50px 50px;
+  /* padding: 50px 50px; */
+  z-index: 60;
 
   & p {
     font-size: large;
+    color: white;
   }
-`
-
-export const DetailClose = styled(MdClose)`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  height: 20px;
-  width: 20px;
-  
-  z-index: 31;
-  cursor: pointer;
 `

@@ -73,7 +73,7 @@ function Profile({ rawUser }) {
 
   return (
     <ThemeProvider theme={theme}>
-        <Stack spacing={10} sx={{ width: '60%' }}>
+        <Stack spacing={10} sx={{ width: '60%', marginTop: '60px' }}>
           <TextField
             label="Name"
             name="name"

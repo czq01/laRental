@@ -132,10 +132,9 @@ function CreatePost() {
           }
 
           postData.requirements = requirements
-          console.log(postData)
-          dispatch(createPost(postData))
         }
       }
+      dispatch(createPost(postData))
     } else {
       toast.error("Attaching a house to your post is required.")
       return

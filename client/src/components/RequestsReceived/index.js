@@ -101,6 +101,7 @@ function RequestsReceived({ requestedBy, need }) {
             sx={{
               background: 'transparent',
             }}
+            disabled={request.deleted}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon color='primary' />}
@@ -114,6 +115,8 @@ function RequestsReceived({ requestedBy, need }) {
                 <Typography sx={{ color: '#d3d3d3', fontSize: '10px' }}>{
                   `${ta.ago(request.createdAt)}`
                 }</Typography>
+                {request.deleted ? 
+                  <Chip label="WITHDRAWED" variant="outlined" color='secondary'/> : null}
               </Stack>
 
             </AccordionSummary>

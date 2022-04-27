@@ -19,9 +19,9 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { theme } from '../MuiTheme'
-import { Container, DetailClose, DetailWrapper } from './styled'
+import { DetailWrapper } from './styled'
 
-function HouseDetail({ toggleShowDetail, handleLikeHouse, 
+function HouseDetail({ handleLikeHouse, 
   houseDetail: {
     _id,
   } }) {
@@ -31,8 +31,6 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
 
   const thisHouse = houses.filter((house) => (_id == house._id))[0]
 
-
-
   const { price,
     location,
     dist,
@@ -41,15 +39,10 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
     size,
     units,
     likes, 
+    href,
   } = thisHouse
 
-  const detailRef = useRef();
   const navigate = useNavigate()
-  const closeDetail = e => {
-    if (detailRef.current === e.target) {
-      toggleShowDetail();
-    }
-  }
 
   const onClickLike = () => {
     if (!user) {
@@ -60,20 +53,23 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
   }
 
   const onClickToPost = () =>{
-    navigate('/main/post/create?'+ _id)
+    navigate('/main/post?'+ _id)
+  }
+
+  const onToSource = (href) => {
+    const w = window.open('about:blank')
+    w.location.href = href
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <Container onClick={closeDetail} ref={detailRef}>
         <DetailWrapper>
-          <DetailClose onClick={toggleShowDetail} />
           
           <Stack direction="row" spacing={2} alignItems='center'>
             <GpsFixedIcon color='primary' />
             <p>{location.formattedAddr}</p>
             <p style={{ color: '#69f0ae' }}>
-            {(dist < 1000) ? `${dist}m` : `${dist / 1000}km`}
+            {(dist < 1000) ? `${dist}m` : `${(dist / 1000).toFixed(1)}km`}
             </p>
           </Stack>
 
@@ -95,15 +91,19 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
             spacing={2}
             alignItems='center'
             flexWrap='wrap'
+
+            rowGap='5px'
+            
           >
             <AppsIcon color='primary' />
             {amenities.map((item, index) => (
+              item !== '' ?
               <Chip
                 key={index}
                 label={item}
                 variant="outlined"
                 color='secondary'
-              />
+              /> : null
             ))}
           </Stack>
 
@@ -111,6 +111,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
             spacing={2}
             alignItems='center'
             flexWrap='wrap'
+            rowGap='5px'
           >
             <StarsIcon color='primary' />
             {highlights.map((item, index) => (
@@ -148,7 +149,7 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
               }
 
               <Tooltip title="More Info" placement="top">
-                <IconButton>
+                <IconButton onClick = {() => onToSource(href)}>
                   <LinkIcon color='primary' />
                 </IconButton>
               </Tooltip>
@@ -163,7 +164,6 @@ function HouseDetail({ toggleShowDetail, handleLikeHouse,
           </Stack>
 
         </DetailWrapper>
-      </Container>
     </ThemeProvider>
   )
 }

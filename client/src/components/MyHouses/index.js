@@ -23,6 +23,8 @@ import houseService from '../../features/houses/houseService';
 import HouseInfo from '../HouseInfo';
 import { updateHouseLikes } from '../../features/houses/houseSlice'
 import { getMe } from '../../features/auth/authSlice'
+import NoData from '../NoData';
+import Loading from '../Loading';
 
 function MyHouses({ user: { houses } }) {
 
@@ -32,7 +34,7 @@ function MyHouses({ user: { houses } }) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const [myHouses, setMyHouses] = useState([])
+  const [myHouses, setMyHouses] = useState()
 
   useEffect(() => {
 
@@ -88,12 +90,16 @@ function MyHouses({ user: { houses } }) {
           padding: '30px 30px',
         }}
       >
-        {myHouses?.map((house, idx) => (
+        {myHouses ?
+        myHouses.length === 0 ? 
+        <NoData message={"You haven't liked anyhouse.."} /> :
+        myHouses?.map((house, idx) => (
           <Accordion
             expanded={expanded === `panel${idx}`}
             onChange={handleChange(`panel${idx}`)}
             sx={{
               background: 'transparent',
+              width: '100%',
             }}
           >
             <AccordionSummary
@@ -145,7 +151,7 @@ function MyHouses({ user: { houses } }) {
 
             </AccordionDetails>
           </Accordion>
-        ))}
+        )) : <Loading />}
       </Stack>
     </ThemeProvider>
   )

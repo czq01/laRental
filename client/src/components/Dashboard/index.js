@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDebugValue, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -13,25 +13,20 @@ import Profile from '../Profile';
 import MyHouses from '../MyHouses';
 import MyPosts from '../MyPosts';
 import MyRequests from '../MyRequests';
-
+import { getMe } from '../../features/auth/authSlice'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-      style={{ width: "100%" }}
+    <TabContainer
+      hide={value !== index}
     >
       {value === index && (
-        <TabContainer>
+        <ItemContainer>
           {children}
-        </TabContainer>
+        </ItemContainer>
       )}
-    </div>
+    </TabContainer>
   );
 }
 
@@ -50,6 +45,12 @@ function a11yProps(index) {
 
 function Dashboard() {
 
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getMe())
+  }, [])
+
+
   const { user } = useSelector((state) => (state.auth))
 
   const [value, setValue] = useState(0);
@@ -63,10 +64,8 @@ function Dashboard() {
       <Container>
         <Box
           sx={{
-            flexGrow: 1,
+            height: '100%',
             display: 'flex',
-            height: 'calc(100vh - 80px)',
-            overflow: 'auto',
           }}
         >
           <Tabs
@@ -83,24 +82,16 @@ function Dashboard() {
             <Tab label="My Requests" {...a11yProps(3)} />
           </Tabs>
           <TabPanel value={value} index={0}>
-            <ItemContainer>
-              <Profile rawUser={user} />
-            </ItemContainer>
+            <Profile rawUser={user} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <ItemContainer>
-              <MyHouses user={user} />
-            </ItemContainer>
+            <MyHouses user={user} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ItemContainer>
-              <MyPosts user={user} />
-            </ItemContainer>
+            <MyPosts user={user} />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <ItemContainer>
-              <MyRequests />
-            </ItemContainer>
+            <MyRequests />
           </TabPanel>
         </Box>
       </Container>

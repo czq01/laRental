@@ -1,27 +1,36 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  min-height: calc(100vh - 80px);
+  overflow: auto;
   position: relative;
-  z-index: 10;
+  z-index: 50;
+
 `
 
 export const TabContainer = styled.div`
-  width: 100%;
+  position: relative;
   height: 100%;
-  
-  display: flex;
+  flex: 1;
+
+
+  display: ${({hide}) => (hide ? 'none' : 'flex')};
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 40px;
 `
 
 export const ItemContainer = styled.div`
-  height: 90%;
-  width: 85%;
+
+  // min-height: 1000px;
+  width: 90%;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
-  margin-top: -70px;
+  z-index: 60;
+
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 30;
+  align-items: flex-start;
+  padding: 0 20px 50px 20px;
 `

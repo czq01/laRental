@@ -7,7 +7,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../MuiTheme'
 function RequestProgress( {requests, need} ) {
 
-  const acceptedNum = requests.filter(req => (
+  const onGoingReqs = requests.filter(req => !req.delete)
+  const acceptedNum = onGoingReqs.filter(req => (
     req.status === "accepted")).length
 
   return (
@@ -21,7 +22,7 @@ function RequestProgress( {requests, need} ) {
             height: "15px", 
             borderRadius: "5px",
             }} />
-        <p>Need {need} / Requested {requests.length} / Approved {acceptedNum} </p>
+        <p>Need {need} / Requested {onGoingReqs.length} / Approved {acceptedNum} </p>
       </Stack>
     </ThemeProvider>
   )

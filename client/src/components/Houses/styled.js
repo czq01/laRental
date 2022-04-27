@@ -8,9 +8,6 @@ export const Container = styled.div`
   
   // Self
   position: relative;
-  filter: ${({showDetail}) => (
-    showDetail ? 'blur(15px)' :  null
-  )};
 
   // Elements
   display: grid;

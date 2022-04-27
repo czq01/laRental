@@ -25,7 +25,7 @@ function Landing() {
 		<>
 			<Container>
 				<BgWrapper>
-					{/* <VideoBg autoPlay loop muted src={Video} type='video/mp4' /> */}
+					<VideoBg autoPlay loop muted src={Video} type='video/mp4' />
 				</BgWrapper>
 				<Content>
 					<H1>LA House Renting Made Easy</H1>
@@ -35,7 +35,7 @@ function Landing() {
 					</P>
 					<BtnWrapper>
 						<Button 
-							to='signup'
+							to='/main/search'
 							onMouseEnter={onHover}
 							onMouseLeave={onHover}
 							primary='true'

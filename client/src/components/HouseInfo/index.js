@@ -40,15 +40,17 @@ function HouseInfo({ house, spacing }) {
           spacing={2}
           alignItems='center'
           flexWrap='wrap'
+          rowGap='7px'
         >
           <AppsIcon color='primary' />
           {amenities?.map((item, index) => (
+            item !== '' ?
             <Chip
               key={index}
               label={item}
               variant="outlined"
               color='secondary'
-            />
+            /> : null
           ))}
         </Stack>
 
@@ -56,15 +58,17 @@ function HouseInfo({ house, spacing }) {
           spacing={2}
           alignItems='center'
           flexWrap='wrap'
+          rowGap='7px'
         >
           <StarsIcon color='primary' />
           {highlights?.map((item, index) => (
+            item !== '' ?
             <Chip
               key={index}
               label={item}
               variant="outlined"
               color='secondary'
-            />
+            /> : null
           ))}
         </Stack>
       </Stack>

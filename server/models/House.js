@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2'
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 import { geocoder } from "../utils/geo.js";
+import mongoose_delete from 'mongoose-delete'
+
 
 const HouseSchema = new mongoose.Schema({
     // Basic Info
@@ -58,6 +60,10 @@ const HouseSchema = new mongoose.Schema({
 
 // Add index on location for later GeoJson query
 HouseSchema.index({ location: '2dsphere' });
+
+// Add soft delete plugin
+// *To use $geoNear aggregate, cannot override aggregate()
+HouseSchema.plugin(mongoose_delete)
 
 // Add pagination plugin
 // HouseSchema.plugin(mongoosePaginate);

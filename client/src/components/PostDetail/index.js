@@ -34,7 +34,7 @@ function PostDetail({ post, house }) {
   };
 
   const { desc, requirements: { people, comment },
-    createdAt, requestedBy } = post
+    createdAt, requestedBy, createdBy } = post
   
   const [requests, setRequests] = useState([])
   useEffect(() => {
@@ -151,9 +151,11 @@ function PostDetail({ post, house }) {
           </HouseWrapper> : 
           <RequestWrapper>
             <SendRequestWrapper>
-              {requests.find(req => (req?.sender === user._id)) 
-                ? <p>You have sent request for this post.</p>
-                : <RequestSender onSendRequest={onSendRequest}/>
+              {requests.find(req => (req?.sender === user._id)) ?
+               <p>You have sent request for this post.</p> :
+                  createdBy === user._id ? 
+                  <p>You are the author.</p> :
+                  <RequestSender onSendRequest={onSendRequest}/>
               }
             </SendRequestWrapper>
             <ProgressWrapper>

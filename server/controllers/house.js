@@ -170,6 +170,13 @@ const getHouseById = async (req, res) => {
 // @Access  Public
 const getHousesByIds = async (req, res) => {
     const { house_ids } = req.query
+    if (house_ids === '') {
+        res.status(200).send({
+            success: true,
+            houses: []
+        })
+        return
+    }
     const ids = house_ids.split(',')
     try {
         const houses = await House.find({
