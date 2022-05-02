@@ -34,21 +34,16 @@ const getHouseBySearch = async (req, res) => {
     // prepare search params
     const { addr, distRange, page, limit, sortBy, asc } = req.query;
     const priceRange = req.query.priceRange.split(',').map((p) => (parseFloat(p)));
-    const amenities = req.query.amenities.split(',');
-    const asc_boolean = asc === 'true' ? true : false
+    const amenities = req.query.amenities.split(',').map( x => (
+        new RegExp(x, "i")
+    ));
+        const asc_boolean = asc === 'true' ? true : false
     try {
         // geocode requested address
         const loc = await geocoder.geocode(addr);
 
         const query = {
-            // location: {
-            //     $geoWithin: {
-            //         $centerSphere: [
-            //             [loc[0].longitude, loc[0].latitude],
-            //             kmToRadius(distRange)
-            //         ]
-            //     }
-            // },
+
             price: {
                 $gte: priceRange[0],
                 $lte: priceRange[1],
