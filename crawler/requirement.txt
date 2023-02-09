@@ -1,0 +1,7 @@
+#python3 libraries:
+lxml
+# (WebDriver with specified chrome version)
+selenium 
+pyautogui
+pymongo
+geocoder
